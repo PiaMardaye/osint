@@ -1,6 +1,6 @@
 # OSINT - Sensibilisation
 
-##Description du projet
+## Description du projet
 Ce projet d'OSINT - Sensibilisation permet de récolter des informations en sources ouvertes à propos d'une entreprise. Ces informations serviront à créer un questionnaire de sensibilisation, personnalisé par rapport à l'entreprise cible, mais pourront également servir à créer une campagne de phishing.
 
 ## Installation et dépendances
@@ -12,7 +12,7 @@ Ce projet d'OSINT - Sensibilisation permet de récolter des informations en sour
 * Geckodriver
 
 ### Installation
-####Installation de Geckodriver
+#### Installation de Geckodriver
 * Rendez-vous sur le site (https://github.com/mozilla/geckodriver/releases) et téléchargez Geckodriver.
 * Placez l'archive dans le répertoire /opt/.
 * Décompressez l'archive : `tar -xzvf archive`.
