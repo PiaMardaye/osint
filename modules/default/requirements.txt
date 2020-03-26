@@ -3,4 +3,3 @@ setuptools
 download
 tqdm
 shodan
-fdpf
