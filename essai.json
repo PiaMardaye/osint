@@ -1,0 +1,353 @@
+{
+  "data": {
+    "domain": "amossys.fr",
+    "disposable": false,
+    "webmail": false,
+    "accept_all": false,
+    "pattern": "{first}.{last}",
+    "organization": "Amossys",
+    "country": null,
+    "state": null,
+    "emails": [
+      {
+        "value": "christophe.dupas@amossys.fr",
+        "type": "personal",
+        "confidence": 99,
+        "sources": [
+          {
+            "domain": "rennes-atalante.fr",
+            "uri": "http://rennes-atalante.fr/annuaire-de-la-technopole/fiche-annuaire/amossys.html",
+            "extracted_on": "2019-02-06",
+            "last_seen_on": "2020-01-16",
+            "still_on_page": true
+          },
+          {
+            "domain": "fr.readkong.com",
+            "uri": "http://fr.readkong.com/page/disponible-dans-le-catalogue-des-solutions-qualifiees-6943888",
+            "extracted_on": "2019-07-19",
+            "last_seen_on": "2019-08-10",
+            "still_on_page": false
+          }
+        ],
+        "first_name": "Christophe",
+        "last_name": "Dupas",
+        "position": null,
+        "seniority": null,
+        "department": null,
+        "linkedin": null,
+        "twitter": null,
+        "phone_number": "+33 2 99 23 15 79"
+      },
+      {
+        "value": "antoine.coutant@amossys.fr",
+        "type": "personal",
+        "confidence": 94,
+        "sources": [
+          {
+            "domain": "derblauweisse.wordpress.com",
+            "uri": "http://derblauweisse.wordpress.com/tag/deutschland",
+            "extracted_on": "2020-03-25",
+            "last_seen_on": "2020-03-26",
+            "still_on_page": true
+          },
+          {
+            "domain": "derblauweisse.wordpress.com",
+            "uri": "http://derblauweisse.wordpress.com/tag/bsi-anerkannte-prufstellen",
+            "extracted_on": "2020-03-23",
+            "last_seen_on": "2020-03-25",
+            "still_on_page": true
+          },
+          {
+            "domain": "derblauweisse.wordpress.com",
+            "uri": "http://derblauweisse.wordpress.com/tag/european-union",
+            "extracted_on": "2020-03-05",
+            "last_seen_on": "2020-03-09",
+            "still_on_page": true
+          },
+          {
+            "domain": "derblauweisse.wordpress.com",
+            "uri": "http://derblauweisse.wordpress.com/tag/windows-8",
+            "extracted_on": "2019-08-31",
+            "last_seen_on": "2020-01-13",
+            "still_on_page": true
+          },
+          {
+            "domain": "derblauweisse.wordpress.com",
+            "uri": "http://derblauweisse.wordpress.com/tag/bund",
+            "extracted_on": "2019-01-30",
+            "last_seen_on": "2020-01-13",
+            "still_on_page": true
+          },
+          {
+            "domain": "sogis.org",
+            "uri": "http://sogis.org/fr/labs_fr.html",
+            "extracted_on": "2015-12-18",
+            "last_seen_on": "2016-09-21",
+            "still_on_page": false
+          },
+          {
+            "domain": "sogis.org",
+            "uri": "http://sogis.org/uk/labs_en.html",
+            "extracted_on": "2015-12-18",
+            "last_seen_on": "2016-09-21",
+            "still_on_page": false
+          }
+        ],
+        "first_name": "Antoine",
+        "last_name": "Coutant",
+        "position": null,
+        "seniority": null,
+        "department": null,
+        "linkedin": null,
+        "twitter": "derblauweisse",
+        "phone_number": null
+      },
+      {
+        "value": "frederic.remi@amossys.fr",
+        "type": "personal",
+        "confidence": 93,
+        "sources": [
+          {
+            "domain": "docplayer.fr",
+            "uri": "http://docplayer.fr/1715417-wrap-up-quack1-http-quack1-me-tag-sstic-2013-html.html",
+            "extracted_on": "2019-05-17",
+            "last_seen_on": "2019-05-17",
+            "still_on_page": true
+          },
+          {
+            "domain": "docplayer.fr",
+            "uri": "http://docplayer.fr/7841103-nos-modules-d-audit-analyse-accompagnement-serenite-securite.html",
+            "extracted_on": "2019-04-02",
+            "last_seen_on": "2019-07-21",
+            "still_on_page": true
+          },
+          {
+            "domain": "docplayer.fr",
+            "uri": "http://docplayer.fr/8845315-utilisation-de-l-analyse-statique-de-code-pour-ameliorer-la-securite-des-applications-embarquees.html",
+            "extracted_on": "2019-03-27",
+            "last_seen_on": "2019-03-27",
+            "still_on_page": true
+          },
+          {
+            "domain": "docplayer.fr",
+            "uri": "http://docplayer.fr/1227634-evaluation-et-certification-carlos-martin-responsable-du-centre-de-certification-de-la-securite-des-technologies-de-l-information.html",
+            "extracted_on": "2019-03-22",
+            "last_seen_on": "2019-03-22",
+            "still_on_page": true
+          },
+          {
+            "domain": "fr.readkong.com",
+            "uri": "http://fr.readkong.com/page/disponible-dans-le-catalogue-des-solutions-qualifiees-6943888",
+            "extracted_on": "2019-07-19",
+            "last_seen_on": "2019-08-10",
+            "still_on_page": false
+          },
+          {
+            "domain": "docplayer.fr",
+            "uri": "http://docplayer.fr/2309731-securite-et-surete-des-systemes-embarques-et-mobiles.html",
+            "extracted_on": "2019-06-05",
+            "last_seen_on": "2019-06-05",
+            "still_on_page": false
+          },
+          {
+            "domain": "edencluster.com",
+            "uri": "http://edencluster.com/en/les_membres/amossys",
+            "extracted_on": "2016-03-27",
+            "last_seen_on": "2016-10-05",
+            "still_on_page": false
+          },
+          {
+            "domain": "edencluster.com",
+            "uri": "http://edencluster.com/les_membres/amossys",
+            "extracted_on": "2016-03-24",
+            "last_seen_on": "2016-10-05",
+            "still_on_page": false
+          },
+          {
+            "domain": "edencluster.com",
+            "uri": "http://edencluster.com/en/les_membres/amossys/",
+            "extracted_on": "2016-01-17",
+            "last_seen_on": "2016-07-06",
+            "still_on_page": false
+          },
+          {
+            "domain": "edencluster.com",
+            "uri": "http://edencluster.com/les_membres/amossys/",
+            "extracted_on": "2016-01-17",
+            "last_seen_on": "2016-06-09",
+            "still_on_page": false
+          }
+        ],
+        "first_name": "Frederic",
+        "last_name": "Remi",
+        "position": "Information Technologies",
+        "seniority": "senior",
+        "department": "sales",
+        "linkedin": null,
+        "twitter": null,
+        "phone_number": null
+      },
+      {
+        "value": "contact@amossys.fr",
+        "type": "generic",
+        "confidence": 90,
+        "sources": [
+          {
+            "domain": "agence-api.ouest-france.fr",
+            "uri": "http://agence-api.ouest-france.fr/societe/amossys",
+            "extracted_on": "2020-02-11",
+            "last_seen_on": "2020-02-11",
+            "still_on_page": true
+          },
+          {
+            "domain": "pole-excellence-cyber.org",
+            "uri": "http://pole-excellence-cyber.org/catalogue-formations/bonnes-pratiques-de-developpement-web",
+            "extracted_on": "2020-02-04",
+            "last_seen_on": "2020-02-04",
+            "still_on_page": true
+          },
+          {
+            "domain": "pole-excellence-cyber.org",
+            "uri": "http://pole-excellence-cyber.org/catalogue-formations/analyse-de-code-malveillant",
+            "extracted_on": "2019-08-15",
+            "last_seen_on": "2020-03-02",
+            "still_on_page": true
+          },
+          {
+            "domain": "pole-excellence-cyber.org",
+            "uri": "http://pole-excellence-cyber.org/catalogue-formations/architecture-defense-profondeur",
+            "extracted_on": "2019-08-15",
+            "last_seen_on": "2020-03-02",
+            "still_on_page": true
+          },
+          {
+            "domain": "pole-excellence-cyber.org",
+            "uri": "http://pole-excellence-cyber.org/catalogue-formations/detection-dintrusion-threat-intelligence",
+            "extracted_on": "2019-08-15",
+            "last_seen_on": "2020-03-09",
+            "still_on_page": true
+          },
+          {
+            "domain": "pole-excellence-cyber.org",
+            "uri": "http://pole-excellence-cyber.org/catalogue-formations/sensibilisation-a-securite-informatique-developpement-informatique",
+            "extracted_on": "2019-08-15",
+            "last_seen_on": "2020-02-06",
+            "still_on_page": true
+          },
+          {
+            "domain": "industrie-techno.com",
+            "uri": "http://industrie-techno.com/article/amossys-expert-en-securite-des-systemes-d-information.7002",
+            "extracted_on": "2019-02-01",
+            "last_seen_on": "2020-02-12",
+            "still_on_page": true
+          },
+          {
+            "domain": "lesdit.org",
+            "uri": "http://lesdit.org/dit/securite",
+            "extracted_on": "2018-11-23",
+            "last_seen_on": "2020-02-22",
+            "still_on_page": true
+          },
+          {
+            "domain": "dirk.eddelbuettel.com",
+            "uri": "http://dirk.eddelbuettel.com/cranberries/2018/09/30",
+            "extracted_on": "2018-11-15",
+            "last_seen_on": "2020-02-14",
+            "still_on_page": true
+          },
+          {
+            "domain": "lesdit.org",
+            "uri": "http://lesdit.org/article-dit/cybersecurite-collectivites-territoriales-quelle-demarche-adopter-pour-securiser-durablement-vos-systemes-dinformation",
+            "extracted_on": "2018-10-20",
+            "last_seen_on": "2020-01-30",
+            "still_on_page": true
+          },
+          {
+            "domain": "dirk.eddelbuettel.com",
+            "uri": "http://dirk.eddelbuettel.com/cranberries/cran/new/index.html",
+            "extracted_on": "2018-10-01",
+            "last_seen_on": "2018-10-07",
+            "still_on_page": false
+          },
+          {
+            "domain": "dirk.eddelbuettel.com",
+            "uri": "http://dirk.eddelbuettel.com/cranberries/index.html",
+            "extracted_on": "2018-10-01",
+            "last_seen_on": "2018-10-03",
+            "still_on_page": false
+          }
+        ],
+        "first_name": null,
+        "last_name": null,
+        "position": null,
+        "seniority": null,
+        "department": "support",
+        "linkedin": null,
+        "twitter": null,
+        "phone_number": null
+      },
+      {
+        "value": "rh@amossys.fr",
+        "type": "generic",
+        "confidence": 78,
+        "sources": [
+          {
+            "domain": "blog.amossys.fr",
+            "uri": "http://blog.amossys.fr/sujets-stage-2018-2019.html",
+            "extracted_on": "2020-03-06",
+            "last_seen_on": "2020-03-06",
+            "still_on_page": true
+          },
+          {
+            "domain": "blog.amossys.fr",
+            "uri": "http://blog.amossys.fr",
+            "extracted_on": "2020-01-04",
+            "last_seen_on": "2020-01-04",
+            "still_on_page": true
+          },
+          {
+            "domain": "blog.amossys.fr",
+            "uri": "http://blog.amossys.fr/author/mael-kervella.html",
+            "extracted_on": "2019-11-28",
+            "last_seen_on": "2019-12-29",
+            "still_on_page": true
+          },
+          {
+            "domain": "blog.amossys.fr",
+            "uri": "http://blog.amossys.fr/fragscapy-fuzzing-protocols-to-evade-firewalls.html",
+            "extracted_on": "2019-11-05",
+            "last_seen_on": "2019-12-31",
+            "still_on_page": true
+          },
+          {
+            "domain": "blog.amossys.fr",
+            "uri": "http://blog.amossys.fr/lightbulb.html",
+            "extracted_on": "2019-07-14",
+            "last_seen_on": "2019-12-26",
+            "still_on_page": false
+          }
+        ],
+        "first_name": null,
+        "last_name": null,
+        "position": null,
+        "seniority": null,
+        "department": null,
+        "linkedin": null,
+        "twitter": null,
+        "phone_number": null
+      }
+    ]
+  },
+  "meta": {
+    "results": 5,
+    "limit": 10,
+    "offset": 0,
+    "params": {
+      "domain": "amossys.fr",
+      "company": "amossys",
+      "type": null,
+      "seniority": null,
+      "department": null
+    }
+  }
+}

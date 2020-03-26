@@ -30,8 +30,8 @@ Ce projet d'OSINT - Sensibilisation permet de récolter des informations en sour
 
 ## Améliorations à faire et fonctionnalités à ajouter
 * Pouvoir entrer un nom d'entreprise composé de plusieurs mots.
-* Faire une recherche SHODAN pour chacune des adresses IP trouvées.
-* Récolter des emails avec [Hunter](https://hunter.io/) et les vérifier sur [Mailtester](https://mailtester.com).
+* Faire une recherche [SHODAN](https://shodan.io) pour chacune des adresses IP trouvées.
+* Vérifier les emails récoltés sur [Mailtester](https://mailtester.com).
 * Récolter des informations sur les employés : nom, fonction, email, âge, hobbies, etc.
 
 **Tous les résultats sont pour l'instant à placer dans un dictionnaire Python : un pour les résultats SHODAN, un pour les emails, et un pour les informations du personnel.**

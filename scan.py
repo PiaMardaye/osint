@@ -34,6 +34,7 @@ from bs4 									import BeautifulSoup 		as bs
 from libs.utils		       import *
 from libs.Infogreffe       import *
 from libs.Dns 			   import *
+from libs.Email			   import *
 
 
 
@@ -111,18 +112,18 @@ def parseArgs(argv):
 
 
 
-def startScan(name, domain_name):
+def startScan(data):
 
 	#------------------------------GENERAL INFORMATION------------------------------
 
-	general_info = getGeneralInfo(browser, name)
+	general_info = getGeneralInfo(browser, data["name"])
 
 	print("General information : \n", general_info, "\n")
 	
 
 	#--------------------------------DNS INFORMATION--------------------------------
 
-	dns_info = getDNSInfo(name, domain_name)
+	dns_info = getDNSInfo(data["name"], data["domain"])
 
 	print("DNS information : \n", dns_info, "\n")
 
@@ -130,7 +131,13 @@ def startScan(name, domain_name):
 	#----------------------------DOMAIN NAME INFORMATION----------------------------
 
 	#TODO (Whois.net)
+
+
+	#------------------------------------EMAILS-------------------------------------
 	
+	emails = getEmails(data["name"], data["domain"])
+
+	print("Emails : \n", emails, "\n")
 
 
 
@@ -143,7 +150,7 @@ if __name__ == "__main__":
 	#Launch Selenium without displaying the open browser.
 	options = Options()
 	options.headless = True
-	browser = wd.Firefox(options=options)
+	browser = wd.Firefox()
 	browser.minimize_window()
 	browser.implicitly_wait(10)
 
@@ -152,7 +159,7 @@ if __name__ == "__main__":
 	soup = bs(html, 'html.parser')
 
 	#Start of the scan.
-	startScan(data["name"], data["domain"])
+	startScan(data)
 
 	#Quit Selenium.
 	browser.quit()

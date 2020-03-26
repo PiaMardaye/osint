@@ -20,8 +20,8 @@ import time
 # WEB REQUESTS
 import requests
 
-#PDF GENERATION
-from fpdf import FPDF 
+# #PDF GENERATION
+# from fpdf import FPDF 
 
 def checkPythonVersion():
 

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from bs4 import BeautifulSoup											as bs
 from selenium 								import webdriver 			as wd
 from selenium.common.exceptions				import *
@@ -42,12 +45,14 @@ def createDict(number):
 
 # Functions that create correct URLs.
 def getURNom_info(browser, company_name):
+	#name = company_name.replace(" ", "+")
 	url = "https://www.societe.com/cgi-bin/liste?nom="+company_name.upper()
 
 	browser.get(url)
 
 
 def getURLMarque_info(browser, company_name):
+	#name = company_name.replace(" ", "+")
 	url = "https://www.societe.com/cgi-bin/liste?marques="+company_name.upper()
 
 	browser.get(url)
@@ -76,7 +81,7 @@ def chooseCompany(browser, company_name):
 
 	number_list = [] #List that contains the numero of the different choices of company.
 	user_choice = None #The number that represents the result the user will choose from all the results.
-	user_choice_plus_one = 0
+	user_choice_int = 0
 	chosen_company = None #The result the user will choose from all the results.
 	href_chosen_company = None #The href of the page that contains more information about the chosen company.
 
@@ -105,11 +110,11 @@ def chooseCompany(browser, company_name):
 
 	#Display the chosen company.
 	chosen_company = result_dict_final[int(user_choice)]
-	print("Chosen company :\n ", chosen_company)
+	print("Chosen company :\n ", chosen_company, "\n")
 
 
 	#There is one <a> tag before the <a> tags corresponding to the results.
-	user_choice_plus_one = int(user_choice)+1
+	user_choice_int = int(user_choice)
 
 
 	#Return to the page where the chosen result was.
@@ -120,7 +125,7 @@ def chooseCompany(browser, company_name):
 	#If the user has chosen a company from the second web page :
 	else:
 		getURLMarque_info(browser, company_name)
-		user_choice_plus_one = user_choice_plus_one - len(result_dict1)
+		user_choice_int = user_choice_int - len(result_dict1)
 
 
 	#BeautifulSoup parser
@@ -138,7 +143,8 @@ def chooseCompany(browser, company_name):
 
 	#Get the href corresponding to the chosen company, 
 	#in order to have the URL leading to more information about this company.
-	liens = elements.select_one("a:nth-of-type("+str(user_choice_plus_one)+")")
+	l = elements.find_all("a")
+	liens = l[user_choice_int]
 	href_chosen_company = liens["href"]
 
 	return href_chosen_company	
@@ -219,7 +225,6 @@ def getResults_marque(browser, dictionary):
 
 
 
-
 def getHeadsResults(browser, url):
 	head_info_dict = {} #Dictionary that will contain information about the heads of the company.
 	info = [] #List that will contain a certain number of dictionaries, one for each person.
@@ -254,6 +259,7 @@ def getHeadsResults(browser, url):
 		if head_list != []:
 			for element in head_list:
 				heads_name.append(element.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "").replace("M ", ""))
+		
 		else:
 			head_list = heads_info.find_all("span", {"class":"flex v-center"})
 			if head_list != []:
@@ -262,18 +268,21 @@ def getHeadsResults(browser, url):
 					match = regex.match(element.text.replace("\n", "").replace("                        ", "").replace("                    ", "").replace("M ", ""))
 					if match != None:
 						heads_name.append(match.groups()[0])
-		
+
 
 		head_list = heads_info.find_all("span", {"class":"ft-bold"})
 		if head_list != []:
 			for element in head_list:
 				heads_date.append(element.contents[0])
 
+
 		head_list = heads_info.find_all("table")
 		if head_list != []:
 			for element in head_list:
 				if element.find("a") != None:
 					heads_links.append(element.find("a")["href"])
+
+		
 
 		for i in heads_links:
 			try:
@@ -286,7 +295,9 @@ def getHeadsResults(browser, url):
 			if cadre != None:
 				birth_year = cadre.find_all("p", {"class":"adressText"})
 				if birth_year != None:
-					heads_birthYear.append(birth_year[0].contents[0].replace("Né en ", ""))
+					heads_birthYear.append(birth_year[0].contents[0].replace("Né en ", "").replace("Née en  ", ""))
+
+		
 
 		#Put the information the final dictionary.
 		if (heads_title != []):
@@ -326,6 +337,7 @@ def getGeneralInfo(browser, company_name):
 	#Get the part of the source code that contains all the results.
 	results = soup.select_one("div#etabs")
 
+	
 	results_elements =  results.select(".Table.identity")
 
 	for i in range(len(results_elements)):
