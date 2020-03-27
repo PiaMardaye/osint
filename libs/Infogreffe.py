@@ -320,6 +320,7 @@ def getGeneralInfo(browser, company_name):
 	results_list = []
 	main_info = {}
 	secondary_info = {}
+	
 
 	#Go to the web page to get more information about the chosen company.
 	href = chooseCompany(browser,company_name)
@@ -355,13 +356,18 @@ def getGeneralInfo(browser, company_name):
 			info2 = line.find_all("td")
 			if info2 != []:
 				columns = [c.contents[0] for c in info2]
-				if columns[0] in ["Dernière date maj", "N° d'établissement (NIC)", "Nature de l'établissement"]:
+				if columns[0] in ["Dernière date maj", "N° d'établissement (NIC)", "Nature de l'établissement", "Code ape (NAF)", "Tranche d'effectif salarié"]:
 					continue
 				if columns[0] == "N° de SIRET":
 					siret = columns[1].contents[0]
 					main_info[columns[0]] = siret
 				else:
 					main_info[columns[0]] = columns[1]
+
+	main_info["Adresse"] = main_info["Adresse"] + " " + main_info["Code postal"] + " " + main_info["Ville"] + ", " + main_info["Pays"]
+	del main_info["Code postal"]
+	del main_info["Ville"]
+	del main_info["Pays"]
 
 	#Add the information about the heads of the company in the main dictionary.
 	head_url = getURLHeads_info(href)
@@ -371,6 +377,7 @@ def getGeneralInfo(browser, company_name):
 
 	#Get information about the other buildings the company may have.
 	for i in range(1, len(results_list)):
+		j = 0
 		other_building = results_list[i]
 		info = other_building.find_all("tr")
 		if info != []:
@@ -378,10 +385,11 @@ def getGeneralInfo(browser, company_name):
 				info2 = line.find_all("td")
 				if info2 != []:
 					columns = [c.contents[0] for c in info2]
-					if columns[0] in ["Dernière date maj", "N° d'établissement (NIC)", "Nature de l'établissement", "Date de création entreprise"]:
+					if columns[0] in ["Complément d'adresse", "Dernière date maj", "N° d'établissement (NIC)", "Nature de l'établissement", "Date de création entreprise", "Code ape (NAF)", "Tranche d'effectif salarié", "Date de création établissement"]:
 						continue
 					#If the buildind is now closed : do not get the information about it.
 					if columns[0] == "Statut":
+						j = 1
 						break
 					elif columns[0] == "N° de SIRET":
 						columns[0] += " de l'établissement secondaire "+str(i)
@@ -390,8 +398,15 @@ def getGeneralInfo(browser, company_name):
 					else:
 						columns[0] += " de l'établissement secondaire "+str(i)
 						secondary_info[columns[0]] = columns[1]
+		
+		#If secondary_info exists for the current value of i, then concatenate the zip code, city and country to the adress.
+		if j == 0:
+			secondary_info["Adresse de l'établissement secondaire "+str(i)] = secondary_info["Adresse de l'établissement secondaire "+str(i)] + " " + secondary_info["Code postal de l'établissement secondaire "+str(i)] + " " + secondary_info["Ville de l'établissement secondaire "+str(i)] + ", " + secondary_info["Pays de l'établissement secondaire "+str(i)]
+			del secondary_info["Code postal de l'établissement secondaire "+str(i)]
+			del secondary_info["Ville de l'établissement secondaire "+str(i)]
+			del secondary_info["Pays de l'établissement secondaire "+str(i)]
 
-	#Add those information in the main dictionary.
-	main_info.update(secondary_info)
+		#Add those information in the main dictionary.
+		main_info.update(secondary_info)
 
 	return main_info
