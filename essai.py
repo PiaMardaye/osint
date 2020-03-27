@@ -18,9 +18,22 @@ import re
 
 
 
+# Function that create a list the contains a certain number of dictionaries.
+def createDict(number):
+	dict_list = []
+
+	for i in range(number):
+		dictionary = {}
+		dict_list.append(dictionary)
+
+	return dict_list
+
+
 
 def getHeadsResults2(browser, url):
 	head_info_dict = {}
+	titles = []
+	i = 0
 
 	browser.get(url)
 
@@ -36,40 +49,52 @@ def getHeadsResults2(browser, url):
 	else:
 		heads_info = soup.select_one("div.Card.frame.table.FicheOldDirigeantsList")
 
+		#All kind of results.
 		all_results = heads_info.find_all("h4")
+
+		#All the tables of results (one table for each kind of results).
 		head_list = heads_info.find_all("table")
+		
+
+		#Number of tables.
 		l = len(head_list)
-		i = l
+
+		#i = 0 at the beginning and will increase by one every time.
+		i = 0
 
 		#Create a dictionary like this : {title1 : {}, title2 = {}, ...}.
 		for element in all_results:
 			head_info_dict[element.contents[0]] = {}
-
-			#i = 0 at the beginning and will increase by one every time.
-			i = l - l
-
+			titles.append(element.contents[0])
+			
+			#Table number i.
 			table = head_list[i]
+
+			#All the lines in table i.
 			lines = table.find_all("tr")
+
+			j = len(lines)
+			dict_list = createDict(j)
+
+			m = 0
+
 			#For each line of the table :
 			for element in lines:
-				column = element.find_all("td")[0]
-				name = column.find("a", {"class":"Link name"})
-				print("name : ", name)
-				# if name != None:
-				# 	head_info_dict[element.contents[0]]["name"] = name.contents[0]
+				#First column of each line gives the name of the person.
+				column = element.find("td")
+				#Get the a tag that contain the names.
+				name = column.find("a", {"class":"Link name"}) 
+
+				if name != []:
+					dict_list[m]["name"] = name.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "").replace("M ", "").replace("MME ", "")
+					m += 1
+
+			head_info_dict[titles[i]]["Employees"] = dict_list
 
 			i += 1
 
-	# head_list = heads_info.find_all("a", {"class":"Link name"})
-	# 	if head_list != []:
-	# 		for element in head_list:
-	# 			heads_name.append(element.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "").replace("M ", ""))			
-
-
-
-
-
 	print(head_info_dict)
+
 
 	# liens = elements.select_one("a:nth-of-type("+str(user_choice_plus_one)+")")
 	# href_chosen_company = liens["href"]

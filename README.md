@@ -10,6 +10,7 @@ Ce projet d'OSINT - Sensibilisation permet de récolter des informations en sour
 * Python 3
 * Firefox
 * Geckodriver
+* Whois
 
 ### Installation
 #### Installation de Geckodriver
@@ -19,13 +20,18 @@ Ce projet d'OSINT - Sensibilisation permet de récolter des informations en sour
 * Rendez-le exécutable : `chmod u+x geckodriver`.
 * Modifiez le PATH : `export PATH=$PATH:/opt/`.
 
-### Installation du projet
+#### Installation de Whois
+* Lancer la commande suivante : `sudo apt-get install whois`.
+
+#### Installation du projet
 * Téléchargez le projet depuis Github : `git clone https://github.com/PiaMardaye/osint`.
 * Rendez-vous dans le dossier du projet : `cd osint`.
 * Lancer l'installation : `python3 setup.py`.
 
 ## Utilisation
 * Lancer le projet comme suit : `python3 scan.py -n nom_de_l'entreprise -d nom_de_domaine_de_l'entreprise`.
+
+*Si le nom de l'entreprise contient plusieurs mots, écrivez le entre guillemets.*
 
 
 ## Améliorations à faire et fonctionnalités à ajouter
