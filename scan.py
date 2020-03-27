@@ -35,6 +35,7 @@ from libs.utils		       import *
 from libs.Infogreffe       import *
 from libs.Dns 			   import *
 from libs.Email			   import *
+from libs.Company 		   import Company
 
 
 
@@ -113,19 +114,46 @@ def parseArgs(argv):
 
 
 def startScan(data):
+	i = 1
+	c = Company(data["name"], data["domain"])
 
 	#------------------------------GENERAL INFORMATION------------------------------
 
 	general_info = getGeneralInfo(browser, data["name"])
 
-	print("General information : \n", general_info, "\n")
+	if "N° de SIRET" in general_info:
+		c.set_SIRET(general_info["N° de SIRET"])
+	if "Adresse" in general_info:
+		c.set_address(general_info["Adresse"])
+	if "Libellé du code APE" in general_info:
+		c.set_activity(general_info["Libellé du code APE"])
+	if "Date de création entreprise" in general_info:
+		c.set_date(general_info["Date de création entreprise"])
+	while ("Adresse de l'établissement secondaire " + str(i) in general_info) or ("N° de SIRET de l'établissement secondaire " + str(i) in general_info) :
+		cc = Company(data["name"], data["domain"])
+		c.set_companies(cc, general_info["Adresse de l'établissement secondaire " + str(i)], general_info["N° de SIRET de l'établissement secondaire " + str(i)])
+		i += 1
+
+	print("Name : ", c.get_name())
+	print("Domain : ", c.get_domain())
+	print("SIRET : ", c.get_SIRET())
+	print("Address : ", c.get_address())
+	print("Activity : ", c.get_activity())
+	print("Date of registration : ", c.get_date())
+	for j in range(1, len(c.get_companies()) + 1):
+		print("SIRET of secondary building ",i, " : ", c.get_companies()[i].get_SIRET())
+		print("Adress of secondary building ",i, " : ", c.get_companies()[i].get_address())
+
+
+
+	#print("General information : \n", general_info, "\n")
 	
 
 	#--------------------------------DNS INFORMATION--------------------------------
 
-	dns_info = getDNSInfo(data["name"], data["domain"])
+	# dns_info = getDNSInfo(data["name"], data["domain"])
 
-	print("DNS information : \n", dns_info, "\n")
+	# print("DNS information : \n", dns_info, "\n")
 
 
 	#----------------------------DOMAIN NAME INFORMATION----------------------------
@@ -135,9 +163,9 @@ def startScan(data):
 
 	#------------------------------------EMAILS-------------------------------------
 	
-	emails = getEmails(data["name"], data["domain"])
+	# emails = getEmails(data["name"], data["domain"])
 
-	print("Emails : \n", emails, "\n")
+	# print("Emails : \n", emails, "\n")
 
 
 
@@ -150,7 +178,7 @@ if __name__ == "__main__":
 	#Launch Selenium without displaying the open browser.
 	options = Options()
 	options.headless = True
-	browser = wd.Firefox()
+	browser = wd.Firefox(options=options)
 	browser.minimize_window()
 	browser.implicitly_wait(10)
 
@@ -160,6 +188,7 @@ if __name__ == "__main__":
 
 	#Start of the scan.
 	startScan(data)
+
 
 	#Quit Selenium.
 	browser.quit()
