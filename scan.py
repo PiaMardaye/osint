@@ -115,12 +115,17 @@ def parseArgs(argv):
 
 def startScan(data):
 	i = 1
+	k = 1
+
+	#Create a company.
 	c = Company(data["name"], data["domain"])
 
 	#------------------------------GENERAL INFORMATION------------------------------
 
+	#Get the general information.
 	general_info = getGeneralInfo(browser, data["name"])
 
+	#Fill the data of the comany.
 	if "N° de SIRET" in general_info:
 		c.set_SIRET(general_info["N° de SIRET"])
 	if "Adresse" in general_info:
@@ -134,26 +139,26 @@ def startScan(data):
 		c.set_companies(cc, general_info["Adresse de l'établissement secondaire " + str(i)], general_info["N° de SIRET de l'établissement secondaire " + str(i)])
 		i += 1
 
+	#Get the data of the data.
 	print("Name : ", c.get_name())
 	print("Domain : ", c.get_domain())
 	print("SIRET : ", c.get_SIRET())
 	print("Address : ", c.get_address())
 	print("Activity : ", c.get_activity())
 	print("Date of registration : ", c.get_date())
+
 	for j in range(1, len(c.get_companies()) + 1):
-		print("SIRET of secondary building ",i, " : ", c.get_companies()[i].get_SIRET())
-		print("Adress of secondary building ",i, " : ", c.get_companies()[i].get_address())
+		print("SIRET of secondary building ",k, " : ", c.get_companies()[k-1].get_SIRET())
+		print("Adress of secondary building ",k, " : ", c.get_companies()[k-1].get_address())
+		k += 1
 
-
-
-	#print("General information : \n", general_info, "\n")
 	
 
 	#--------------------------------DNS INFORMATION--------------------------------
 
-	# dns_info = getDNSInfo(data["name"], data["domain"])
+	dns_info = getDNSInfo(data["name"], data["domain"])
 
-	# print("DNS information : \n", dns_info, "\n")
+	print("DNS information : \n", dns_info, "\n")
 
 
 	#----------------------------DOMAIN NAME INFORMATION----------------------------
@@ -163,9 +168,9 @@ def startScan(data):
 
 	#------------------------------------EMAILS-------------------------------------
 	
-	# emails = getEmails(data["name"], data["domain"])
+	emails = getEmails(data["name"], data["domain"])
 
-	# print("Emails : \n", emails, "\n")
+	print("Emails : \n", emails, "\n")
 
 
 
