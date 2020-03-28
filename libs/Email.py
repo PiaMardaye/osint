@@ -1,37 +1,54 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import platform
-import os
 import requests
 import json
 
-
-def extract(dictionary):
-	pass
-
-
-
-def getEmails(company_name, company_domain):
-	data = {}
-
-
-	print("[*] Searching emails linked to "+company_name.upper()+".\n")
-
-	# Create a file to put the results of the requests below in it.
-	os.system("touch emails.json")
+def getEmails(company_domain):
 
 	#Search for emails.
-	req = requests.get("https://api.hunter.io/v2/domain-search?company=" + company_name + "&api_key=120a3fe9378ed32c9fced6973f43cc85ede7fb5e")
+	req = requests.get("https://api.hunter.io/v2/domain-search?domain=" + company_domain + "&api_key=120a3fe9378ed32c9fced6973f43cc85ede7fb5e")
 
-	#Write the results in the file that had been created.
+	# Write the results in the file that had been created (useful for debug or get more information).
 	fichier = open("emails.json", "w")
 	fichier.write(req.text)
 
-	#From json file to python dictionary.
-	with open("emails.json") as json_file:
-		results = json.load(json_file)
+	#Parse data from Web request results.
+	r = json.loads(req.text)
 
+	#Only email parts contain most valuable information.
+	emails = r["data"]["emails"]
 
+	data = []
+	for e in emails:
+		# We create a new dict with only interesting value
 
-	return results
+		if e["first_name"] == None:
+			if e["last_name"] != None:
+				name = e["last_name"]
+			else:
+				name = "Unknown"
+
+		elif e["last_name"] == None:
+			if e["first_name"] != None:
+				name = e["first_name"]
+			else:
+				name = "Unknown"
+
+		else:
+			name = e["first_name"] + " " + e["last_name"]
+
+		data.append({
+			"email":e["value"],
+			"name": name,
+			"position": e["position"],
+			"twitter": True if e["twitter"] != None else False
+		})
+
+	return data
+
+# d = getEmails("esiea.fr")
+
+# for e in d:
+# 	print(e)
+# 	print("\n")

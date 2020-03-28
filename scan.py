@@ -36,6 +36,7 @@ from libs.Infogreffe       import *
 from libs.Dns 			   import *
 from libs.Email			   import *
 from libs.Company 		   import Company
+from libs.Employee 		   import Employee 
 
 
 
@@ -120,26 +121,69 @@ def startScan(data):
 	#Create a company.
 	c = Company(data["name"], data["domain"])
 
+
+	#------------------------------------EMAILS-------------------------------------
+	
+	emails = getEmails(data["domain"])
+
+	# print("Emails : \n", emails, "\n")
+
+
+
 	#------------------------------GENERAL INFORMATION------------------------------
 
 	#Get the general information.
 	general_info = getGeneralInfo(browser, data["name"])
+	heads_info = getHeadsResults(browser, getURLHeads_info(general_info["href"])) + emails
+
 
 	#Fill the data of the comany.
 	if "N° de SIRET" in general_info:
 		c.set_SIRET(general_info["N° de SIRET"])
+
 	if "Adresse" in general_info:
 		c.set_address(general_info["Adresse"])
+
 	if "Libellé du code APE" in general_info:
 		c.set_activity(general_info["Libellé du code APE"])
+
 	if "Date de création entreprise" in general_info:
 		c.set_date(general_info["Date de création entreprise"])
+
 	while ("Adresse de l'établissement secondaire " + str(i) in general_info) or ("N° de SIRET de l'établissement secondaire " + str(i) in general_info) :
 		cc = Company(data["name"], data["domain"])
 		c.set_companies(cc, general_info["Adresse de l'établissement secondaire " + str(i)], general_info["N° de SIRET de l'établissement secondaire " + str(i)])
 		i += 1
 
-	#Get the data of the data.
+	for person in heads_info:
+		if "name" in person:
+			employee = Employee(person["name"])
+			if "birthyear" in person:
+				employee.set_birthyear(person["birthyear"])
+			else:
+				employee.set_birthyear("Unknown.")
+			if "email" in person:
+				employee.set_email(person["email"])
+			else:
+				employee.set_email("Unknown.")
+			if "position" in person:
+				employee.set_position(person["position"])
+			else:
+				employee.set_position("Unknown.")
+			if "twitter" in person:
+				if person["twitter"] != "False":
+					employee.set_twitter("Has an account.")
+				else:
+					employee.set_twitter("No account.")
+			else:
+				employee.set_twitter("Unknown.")
+		else:
+			continue
+
+
+
+	#Get the data of the company.
+	print("\tGENERAL INFORMATION :")
 	print("Name : ", c.get_name())
 	print("Domain : ", c.get_domain())
 	print("SIRET : ", c.get_SIRET())
@@ -147,30 +191,27 @@ def startScan(data):
 	print("Activity : ", c.get_activity())
 	print("Date of registration : ", c.get_date())
 
+	print("OTHER BUILDINGS :")
 	for j in range(1, len(c.get_companies()) + 1):
 		print("SIRET of secondary building ",k, " : ", c.get_companies()[k-1].get_SIRET())
 		print("Adress of secondary building ",k, " : ", c.get_companies()[k-1].get_address())
+		print("\n")
 		k += 1
 
-	
+
+
 
 	#--------------------------------DNS INFORMATION--------------------------------
 
-	dns_info = getDNSInfo(data["name"], data["domain"])
+	# dns_info = getDNSInfo(data["name"], data["domain"])
 
-	print("DNS information : \n", dns_info, "\n")
+	# print("DNS information : \n", dns_info, "\n")
 
 
 	#----------------------------DOMAIN NAME INFORMATION----------------------------
 
 	#TODO (Whois.net)
 
-
-	#------------------------------------EMAILS-------------------------------------
-	
-	emails = getEmails(data["name"], data["domain"])
-
-	print("Emails : \n", emails, "\n")
 
 
 

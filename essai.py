@@ -31,7 +31,7 @@ def createDict(number):
 
 
 def getHeadsResults2(browser, url):
-	head_info_dict = {}
+	head_info_list = []
 	titles = []
 	to_remove = []
 	i = 0
@@ -46,7 +46,7 @@ def getHeadsResults2(browser, url):
 
 	#If there is no page for the heads information : end the fonction by returning an empty dictionary.
 	if soup.select_one("div#error") != None:
-		return head_info_dict
+		return head_info_list
 
 	#If the page exists :
 	else:
@@ -67,7 +67,6 @@ def getHeadsResults2(browser, url):
 
 		#Create a dictionary like this : {title1 : {}, title2 = {}, ...}.
 		for element in all_results:
-			head_info_dict[element.contents[0]] = {}
 			titles.append(element.contents[0])
 			
 			#Table number i.
@@ -90,6 +89,8 @@ def getHeadsResults2(browser, url):
 				name = column.find("a", {"class":"Link name"}) 
 
 				if name != []:
+
+					dict_list[m]["position"] = titles[i]
 					#Keep only the physical person and not moral person.
 					name_clean = name.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "")
 
@@ -101,16 +102,14 @@ def getHeadsResults2(browser, url):
 
 					if (matche1 != None) or (matche2 != None):
 						if matche2 != None :
-							dict_list[m]["name"] = matche2.groups()[0]
+							dict_list[m]["name"] = matche2.groups()[0].replace("M ", "").replace("MME ", "")
 						
 						else:
-							dict_list[m]["name"] = matche1.groups()[0]	
+							dict_list[m]["name"] = matche1.groups()[0].replace("M ", "").replace("MME ", "")
 						
-						print(dict_list[m])
 						
 					 	#Get the age of each person.
 						link = name["href"]
-						print(link)
 
 						try:
 							browser.get(link)
@@ -124,8 +123,8 @@ def getHeadsResults2(browser, url):
 							birth_year = cadre.find_all("p", {"class":"adressText"})
 				
 							if birth_year != None:
-								dict_list[m]["Birth year"] = birth_year[0].contents[0].replace("Né en ", "").replace("Née en  ", "")
-								print("OK.")
+								dict_list[m]["birthyear"] = birth_year[0].contents[0].replace("Né en ", "").replace("Née en  ", "")
+								
 				m += 1
 
 
@@ -141,13 +140,14 @@ def getHeadsResults2(browser, url):
 					dict_list.remove(to_remove[n])
 
 			
-			#Add dict_list to the final dictionary.
-			head_info_dict[titles[i]] = dict_list
+			#Add the elements of dict_list to the final list.
+			for e in dict_list:
+				head_info_list.append(e)
 
 			#Do the same for the next table.
 			i += 1
 
-	print(head_info_dict)
+	print(head_info_list)
 
 
 
