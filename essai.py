@@ -33,7 +33,10 @@ def createDict(number):
 def getHeadsResults2(browser, url):
 	head_info_dict = {}
 	titles = []
+	to_remove = []
 	i = 0
+	regex1 = re.compile(r"^((M|MME)\s\w*\s\w*)")
+	regex2 = re.compile(r"^((M|MME)\s\w*\s\w*\s\w*)")
 
 	browser.get(url)
 
@@ -82,22 +85,71 @@ def getHeadsResults2(browser, url):
 			for element in lines:
 				#First column of each line gives the name of the person.
 				column = element.find("td")
+
 				#Get the a tag that contain the names.
 				name = column.find("a", {"class":"Link name"}) 
 
 				if name != []:
-					dict_list[m]["name"] = name.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "").replace("M ", "").replace("MME ", "")
-					m += 1
+					#Keep only the physical person and not moral person.
+					name_clean = name.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "")
 
-			head_info_dict[titles[i]]["Employees"] = dict_list
+					#Get only a name with 2 words (ex : Frederic DUPONT).
+					matche1 = regex1.match(name_clean)
 
+					#Get only a name with 3 words (ex : Frederic LE MOINE).
+					matche2 = regex2.match(name_clean)
+
+					if (matche1 != None) or (matche2 != None):
+						if matche2 != None :
+							dict_list[m]["name"] = matche2.groups()[0]
+						
+						else:
+							dict_list[m]["name"] = matche1.groups()[0]	
+						
+						print(dict_list[m])
+						
+					 	#Get the age of each person.
+						link = name["href"]
+						print(link)
+
+						try:
+							browser.get(link)
+						except:
+							break
+
+						html = browser.page_source
+						soup = bs(html, 'html.parser')
+						cadre = soup.select_one("div#company_identity")
+						if cadre != None:
+							birth_year = cadre.find_all("p", {"class":"adressText"})
+				
+							if birth_year != None:
+								dict_list[m]["Birth year"] = birth_year[0].contents[0].replace("Né en ", "").replace("Née en  ", "")
+								print("OK.")
+				m += 1
+
+
+			#Add the empty elements from dict_list to the to_remove list.
+			for k in range(j):
+				if dict_list[k] == {}:
+					to_remove.append(dict_list[k])
+
+			#For each element in to_remove list, remove it from dict_list.
+			l = len(to_remove)	
+			if l != 0:
+				for n in range(l):
+					dict_list.remove(to_remove[n])
+
+			
+			#Add dict_list to the final dictionary.
+			head_info_dict[titles[i]] = dict_list
+
+			#Do the same for the next table.
 			i += 1
 
 	print(head_info_dict)
 
 
-	# liens = elements.select_one("a:nth-of-type("+str(user_choice_plus_one)+")")
-	# href_chosen_company = liens["href"]
 
 
 if __name__=="__main__":

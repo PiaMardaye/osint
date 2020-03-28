@@ -224,15 +224,13 @@ def getResults_marque(browser, dictionary):
 		return results_dict2
 
 
-
 def getHeadsResults(browser, url):
-	head_info_dict = {} #Dictionary that will contain information about the heads of the company.
-	info = [] #List that will contain a certain number of dictionaries, one for each person.
-	heads_title = [] #List for the role of the persons.
-	heads_name = [] #List for the name of the persons.
-	heads_date = [] #List for the date since when the person have been working in the company.
-	heads_links = [] #List for the URLs leading to the web page where we can find the birth year of each person.
-	heads_birthYear = [] #List for the birth each of the persons.
+	head_info_dict = {}
+	titles = []
+	to_remove = []
+	i = 0
+	regex1 = re.compile(r"^((M|MME)\s\w*\s\w*)")
+	regex2 = re.compile(r"^((M|MME)\s\w*\s\w*\s\w*)")
 
 	browser.get(url)
 
@@ -248,70 +246,100 @@ def getHeadsResults(browser, url):
 	else:
 		heads_info = soup.select_one("div.Card.frame.table.FicheOldDirigeantsList")
 
-		for element in heads_info.find_all("h4"):
-			heads_title.append(element.contents[0])
+		#All kind of results.
+		all_results = heads_info.find_all("h4")
 
-		#Create l dictionaries, and add them in the list "info".
-		l = len(heads_title)
-		info = createDict(l)
-
-		head_list = heads_info.find_all("a", {"class":"Link name"})
-		if head_list != []:
-			for element in head_list:
-				heads_name.append(element.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "").replace("M ", ""))
-		
-		else:
-			head_list = heads_info.find_all("span", {"class":"flex v-center"})
-			if head_list != []:
-				regex = re.compile(r"^(\w*\s*\w*)[G][\w\s\w-]*$")
-				for element in head_list:
-					match = regex.match(element.text.replace("\n", "").replace("                        ", "").replace("                    ", "").replace("M ", ""))
-					if match != None:
-						heads_name.append(match.groups()[0])
-
-
-		head_list = heads_info.find_all("span", {"class":"ft-bold"})
-		if head_list != []:
-			for element in head_list:
-				heads_date.append(element.contents[0])
-
-
+		#All the tables of results (one table for each kind of results).
 		head_list = heads_info.find_all("table")
-		if head_list != []:
-			for element in head_list:
-				if element.find("a") != None:
-					heads_links.append(element.find("a")["href"])
-
 		
 
-		for i in heads_links:
-			try:
-				browser.get(i)
-			except:
-				break
-			html = browser.page_source
-			soup = bs(html, 'html.parser')
-			cadre = soup.select_one("div#company_identity")
-			if cadre != None:
-				birth_year = cadre.find_all("p", {"class":"adressText"})
-				if birth_year != None:
-					heads_birthYear.append(birth_year[0].contents[0].replace("Né en ", "").replace("Née en  ", ""))
+		#Number of tables.
+		l = len(head_list)
 
-		
+		#i = 0 at the beginning and will increase by one every time.
+		i = 0
 
-		#Put the information the final dictionary.
-		if (heads_title != []):
-			for i in range(l):
-				if heads_name != []:
-					info[i]["Nom"] = heads_name[i]
-				if heads_birthYear != []:
-					info[i]["Année de naissance"] = heads_birthYear[i]
-				if heads_date != []:
-					info[i]["Occupe ce poste depuis le"] = heads_date[i]
-				head_info_dict[heads_title[i]] = info[i]
+		#Create a dictionary like this : {title1 : {}, title2 = {}, ...}.
+		for element in all_results:
+			head_info_dict[element.contents[0]] = {}
+			titles.append(element.contents[0])
+			
+			#Table number i.
+			table = head_list[i]
+
+			#All the lines in table i.
+			lines = table.find_all("tr")
+
+			j = len(lines)
+			dict_list = createDict(j)
+
+			m = 0
+
+			#For each line of the table :
+			for element in lines:
+				#First column of each line gives the name of the person.
+				column = element.find("td")
+
+				#Get the a tag that contain the names.
+				name = column.find("a", {"class":"Link name"}) 
+
+				if name != []:
+					#Keep only the physical person and not moral person.
+					name_clean = name.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "")
+
+					#Get only a name with 2 words (ex : Frederic DUPONT).
+					matche1 = regex1.match(name_clean)
+
+					#Get only a name with 3 words (ex : Frederic LE MOINE).
+					matche2 = regex2.match(name_clean)
+
+					if (matche1 != None) or (matche2 != None):
+						if matche2 != None :
+							dict_list[m]["name"] = matche2.groups()[0]
+						
+						else:
+							dict_list[m]["name"] = matche1.groups()[0]	
+						
+						
+					 	#Get the age of each person.
+						link = name["href"]
+
+						try:
+							browser.get(link)
+						except:
+							break
+
+						html = browser.page_source
+						soup = bs(html, 'html.parser')
+						cadre = soup.select_one("div#company_identity")
+						if cadre != None:
+							birth_year = cadre.find_all("p", {"class":"adressText"})
+				
+							if birth_year != None:
+								dict_list[m]["Birth year"] = birth_year[0].contents[0].replace("Né en ", "").replace("Née en  ", "")
+								
+				m += 1
+
+
+			#Add the empty elements from dict_list to the to_remove list.
+			for k in range(j):
+				if dict_list[k] == {}:
+					to_remove.append(dict_list[k])
+
+			#For each element in to_remove list, remove it from dict_list.
+			l = len(to_remove)	
+			if l != 0:
+				for n in range(l):
+					dict_list.remove(to_remove[n])
+
+			
+			#Add dict_list to the final dictionary.
+			head_info_dict[titles[i]] = dict_list
+
+			#Do the same for the next table.
+			i += 1
 
 	return head_info_dict
-
 
 
 
