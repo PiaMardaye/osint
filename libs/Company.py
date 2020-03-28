@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# DUMPS AND SERIALIZATION
-import json
-
-from libs.Infogreffe	import *
 
 
 class Company:
@@ -25,6 +21,7 @@ class Company:
 		self._employees = []
 		self._companies = []
 
+	
 	#Accessors
 	def get_name(self):
 		return self._name
@@ -89,7 +86,7 @@ class Company:
 		self._leaked_emails = p_leaked_emails
 
 	def set_employees(self, p_employees):
-		self._employees = p_employees
+		self._employees.append(p_employees)
 
 	def set_companies(self, p_companies, p_adress, p_SIRET):
 		p_companies.set_SIRET(p_SIRET)
