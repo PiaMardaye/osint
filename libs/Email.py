@@ -5,6 +5,7 @@ import requests
 import json
 
 def getEmails(company_domain):
+	data = []
 
 	#Search for emails.
 	req = requests.get("https://api.hunter.io/v2/domain-search?domain=" + company_domain + "&api_key=120a3fe9378ed32c9fced6973f43cc85ede7fb5e")
@@ -19,36 +20,33 @@ def getEmails(company_domain):
 	#Only email parts contain most valuable information.
 	emails = r["data"]["emails"]
 
-	data = []
-	for e in emails:
-		# We create a new dict with only interesting value
+	if emails != []:
+		for e in emails:
 
-		if e["first_name"] == None:
-			if e["last_name"] != None:
-				name = e["last_name"]
+			if e["first_name"] == None:
+				if e["last_name"] != None:
+					name = e["last_name"]
+				else:
+					name = "Unknown"
+
+			elif e["last_name"] == None:
+				if e["first_name"] != None:
+					name = e["first_name"]
+				else:
+					name = "Unknown"
+
 			else:
-				name = "Unknown"
+				name = e["first_name"] + " " + e["last_name"]
 
-		elif e["last_name"] == None:
-			if e["first_name"] != None:
-				name = e["first_name"]
-			else:
-				name = "Unknown"
+			data.append({
+				"email":e["value"],
+				"name": name,
+				"position": e["position"],
+				"twitter": True if e["twitter"] != None else False
+			})
 
-		else:
-			name = e["first_name"] + " " + e["last_name"]
-
-		data.append({
-			"email":e["value"],
-			"name": name,
-			"position": e["position"],
-			"twitter": True if e["twitter"] != None else False
-		})
+	else:
+		return data
 
 	return data
 
-# d = getEmails("esiea.fr")
-
-# for e in d:
-# 	print(e)
-# 	print("\n")

@@ -124,9 +124,8 @@ def startScan(data):
 
 	#------------------------------------EMAILS-------------------------------------
 	
-	emails = getEmails(data["domain"])
-
-	# print("Emails : \n", emails, "\n")
+	emails = []
+	#emails = getEmails(data["domain"])
 
 
 
@@ -177,13 +176,16 @@ def startScan(data):
 					employee.set_twitter("No account.")
 			else:
 				employee.set_twitter("Unknown.")
+
+			c.set_employees(employee)
+
 		else:
 			continue
 
 
 
 	#Get the data of the company.
-	print("\tGENERAL INFORMATION :")
+	print("\n--------------GENERAL INFORMATION--------------")
 	print("Name : ", c.get_name())
 	print("Domain : ", c.get_domain())
 	print("SIRET : ", c.get_SIRET())
@@ -191,12 +193,23 @@ def startScan(data):
 	print("Activity : ", c.get_activity())
 	print("Date of registration : ", c.get_date())
 
-	print("OTHER BUILDINGS :")
+
+	companies_list = c.get_companies()
 	for j in range(1, len(c.get_companies()) + 1):
-		print("SIRET of secondary building ",k, " : ", c.get_companies()[k-1].get_SIRET())
-		print("Adress of secondary building ",k, " : ", c.get_companies()[k-1].get_address())
+		print("SIRET of secondary building ",k, " : ", companies_list[k-1].get_SIRET())
+		print("Adress of secondary building ",k, " : ", companies_list[k-1].get_address())
 		print("\n")
 		k += 1
+
+	print("\n\n--------------EMPLOYEES--------------")
+	employees_list = c.get_employees()
+	for j in range(len(employees_list)):
+		print("Name : ", employees_list[j].get_name())
+		print("Born in : ", employees_list[j].get_birthyear())
+		print("Position : ", employees_list[j].get_position())
+		print("Email : ", employees_list[j].get_email())
+		print("Twitter : ", employees_list[j].get_twitter())
+		print("\n")
 
 
 
