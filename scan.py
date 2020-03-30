@@ -34,6 +34,7 @@ from bs4 									import BeautifulSoup 		as bs
 from libs.utils		       import *
 from libs.Infogreffe       import *
 from libs.Dns 			   import *
+from libs.Whois			   import *
 from libs.Email			   import *
 from libs.Company 		   import Company
 from libs.Employee 		   import Employee 
@@ -124,10 +125,14 @@ def startScan(data):
 
 	#------------------------------------EMAILS-------------------------------------
 	
+	#Uncomment the second line only if it's necessary (Hunter.io offers only 50 requests/month).
+	#emails = []
 	emails = getEmails(data["domain"])
 
-	# print("Emails : \n", emails, "\n")
 
+	#--------------------------------DNS INFORMATION--------------------------------
+
+	dns_info = getDNSInfo(data["name"], data["domain"])
 
 
 	#------------------------------GENERAL INFORMATION------------------------------
@@ -137,7 +142,7 @@ def startScan(data):
 	heads_info = getHeadsResults(browser, getURLHeads_info(general_info["href"])) + emails
 
 
-	#Fill the data of the comany.
+	#Fill the data of the company.
 	if "N° de SIRET" in general_info:
 		c.set_SIRET(general_info["N° de SIRET"])
 
@@ -154,6 +159,23 @@ def startScan(data):
 		cc = Company(data["name"], data["domain"])
 		c.set_companies(cc, general_info["Adresse de l'établissement secondaire " + str(i)], general_info["N° de SIRET de l'établissement secondaire " + str(i)])
 		i += 1
+
+	if dns_info["subdomains"] != []:
+		if dns_info["subdomains"] != []:
+			for subdomain in dns_info["subdomains"]:
+				c.set_subdomains(subdomain)
+
+	if dns_info["dns"] != []:
+		for info in dns_info["dns"]:
+			c.set_dns_info(info)
+
+	if dns_info["mx"] != []:
+		for info in dns_info["mx"]:
+			c.set_mx_info(info)
+
+	if dns_info["host"] != []:
+		for info in dns_info["host"]:
+			c.set_host_info(info)
 
 	for person in heads_info:
 		if "name" in person:
@@ -177,40 +199,88 @@ def startScan(data):
 					employee.set_twitter("No account.")
 			else:
 				employee.set_twitter("Unknown.")
+
+			c.set_employees(employee)
+
 		else:
 			continue
 
 
 
-	#Get the data of the company.
-	print("\tGENERAL INFORMATION :")
-	print("Name : ", c.get_name())
-	print("Domain : ", c.get_domain())
-	print("SIRET : ", c.get_SIRET())
-	print("Address : ", c.get_address())
-	print("Activity : ", c.get_activity())
-	print("Date of registration : ", c.get_date())
 
-	print("OTHER BUILDINGS :")
+	#Get the data of the company.
+	print("\n--------------GENERAL INFORMATION--------------")
+	print("Main building\n:")
+	print("\tName : ", c.get_name())
+	print("\tDomain : ", c.get_domain())
+	print("\tSIRET : ", c.get_SIRET())
+	print("\tAddress : ", c.get_address())
+	print("\tActivity : ", c.get_activity())
+	print("\tDate of registration : ", c.get_date())
+
+
+	companies_list = c.get_companies()
 	for j in range(1, len(c.get_companies()) + 1):
-		print("SIRET of secondary building ",k, " : ", c.get_companies()[k-1].get_SIRET())
-		print("Adress of secondary building ",k, " : ", c.get_companies()[k-1].get_address())
-		print("\n")
+		print("\nBuilding ", j+1, " :\n")
+		print("\tSIRET : ", companies_list[k-1].get_SIRET())
+		print("\tAdress : ", companies_list[k-1].get_address())
 		k += 1
 
 
+	print("\n--------------DOMAIN INFORMATION--------------")
+	print("Domain :\n")
+	getWhois(data["domain"])
+	getHost(data["domain"])
+	print("\n")
+
+	if dns_info["subdomains"] != []:
+		print("Subdomains : \n")
+		subdomains_list = c.get_subdomains() 
+		for subdomain in subdomains_list:
+			print("\t", subdomain)
+			getWhois(subdomain)
+			getHost(subdomain)
+			print("\n")
+
+	if dns_info["dns"] != []:
+		print("\nDNS information :\n")
+		dns_list = c.get_dns_info()
+		for dns in dns_list:
+			print("\tDNS : ", dns["domain"])
+			print("\tIP adress : ", dns["ip"])
+			print("\tOwner : ", dns["owner"])
+			print("\n")
+
+	if dns_info["mx"] != []:
+		print("Message server information :\n")
+		mx_list = c.get_mx_info()
+		for mx in mx_list:
+			print("\tMX server : ", mx["domain"])
+			print("\tIP adress : ", mx["ip"])
+			print("\tOwner : ", mx["owner"])
+			print("\n")
+
+	if dns_info["host"] != []:
+		print("Host information :\n")
+		host_list = c.get_host_info()
+		for host in host_list:
+			print("\tHost : ", host["domain"])
+			print("\tIP adress : ", host["ip"])
+			print("\tOwner : ", host["owner"])
+			print("\n")
 
 
-	#--------------------------------DNS INFORMATION--------------------------------
+	if heads_info != []:
+		print("\n--------------EMPLOYEES--------------")
+		employees_list = c.get_employees()
+		for j in range(len(employees_list)):
+			print("Name : ", employees_list[j].get_name())
+			print("Born in : ", employees_list[j].get_birthyear())
+			print("Position : ", employees_list[j].get_position())
+			print("Email : ", employees_list[j].get_email())
+			print("Twitter : ", employees_list[j].get_twitter())
+			print("\n")
 
-	# dns_info = getDNSInfo(data["name"], data["domain"])
-
-	# print("DNS information : \n", dns_info, "\n")
-
-
-	#----------------------------DOMAIN NAME INFORMATION----------------------------
-
-	#TODO (Whois.net)
 
 
 

@@ -14,6 +14,7 @@ from webdriver_manager.firefox 				import GeckoDriverManager
 import time
 import copy
 import re
+import os
 
 
 
@@ -356,6 +357,8 @@ def getGeneralInfo(browser, company_name):
 	href = chooseCompany(browser,company_name)
 	getURLChoosenCompany(browser, href)
 
+	time.sleep(2)
+	os.system("clear")
 
 	print("[*] Searching general information about "+company_name.upper()+".\n")
 
