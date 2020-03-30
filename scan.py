@@ -126,8 +126,9 @@ def startScan(data):
 	#------------------------------------EMAILS-------------------------------------
 	
 	#Uncomment the second line only if it's necessary (Hunter.io offers only 50 requests/month).
-	#emails = []
-	emails = getEmails(data["domain"])
+	emails = []
+	
+	#emails = getEmails(data["domain"])
 
 
 	#--------------------------------DNS INFORMATION--------------------------------
