@@ -90,8 +90,6 @@ def getDNSInfo(company_name, company_domain):
 	r = s.post(url, data=data)
 
 
-	print("[*] Searching DNS information on "+company_domain+".\n")
-
 	#Check if there is any result.
 	if r.text.find("There was an error getting results. Check your query and try again") != -1:
 		print("[-] No result found...")

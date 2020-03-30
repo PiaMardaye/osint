@@ -1,167 +1,186 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import subprocess
 
-from bs4 import BeautifulSoup											as bs
-from selenium 								import webdriver 			as wd
-from selenium.common.exceptions				import *
-from selenium.webdriver.common.keys 		import Keys
-from selenium.webdriver.common.by 			import By
-from selenium.webdriver.firefox.options 	import Options
-from selenium.webdriver.support.ui          import WebDriverWait
-from selenium.webdriver.support             import expected_conditions  as EC 
-from webdriver_manager.firefox 				import GeckoDriverManager
+def getHost(company_domain):
+	ip_adresses = []
+	r = subprocess.run(["host",company_domain], stdout=subprocess.PIPE)
+	out = r.stdout.decode('utf-8')
 
-import time
-import copy
-import re
+	#Create a list that contains each line of the result.
+	lines = out.split("\n")
 
+	for line in lines:
+		if line.count("has address") == 1:
+			ip_adress = line.split(" ")[3]
+			ip_adresses.append(ip_adress)
 
-
-# Function that create a list the contains a certain number of dictionaries.
-def createDict(number):
-	dict_list = []
-
-	for i in range(number):
-		dictionary = {}
-		dict_list.append(dictionary)
-
-	return dict_list
+	for i in range(len(ip_adresses)):
+		print("\t\tIP adress ", str(i+1), " : ", ip_adresses[1])
 
 
 
-def getHeadsResults2(browser, url):
-	head_info_list = []
-	titles = []
-	to_remove = []
-	i = 0
-	regex1 = re.compile(r"^((M|MME)\s\w*\s\w*)")
-	regex2 = re.compile(r"^((M|MME)\s\w*\s\w*\s\w*)")
+# from bs4 import BeautifulSoup											as bs
+# from selenium 								import webdriver 			as wd
+# from selenium.common.exceptions				import *
+# from selenium.webdriver.common.keys 		import Keys
+# from selenium.webdriver.common.by 			import By
+# from selenium.webdriver.firefox.options 	import Options
+# from selenium.webdriver.support.ui          import WebDriverWait
+# from selenium.webdriver.support             import expected_conditions  as EC 
+# from webdriver_manager.firefox 				import GeckoDriverManager
 
-	browser.get(url)
+# import time
+# import copy
+# import re
 
-	#BeautifulSoup parser
-	html = browser.page_source
-	soup = bs(html, 'html.parser')
 
-	#If there is no page for the heads information : end the fonction by returning an empty dictionary.
-	if soup.select_one("div#error") != None:
-		return head_info_list
 
-	#If the page exists :
-	else:
-		heads_info = soup.select_one("div.Card.frame.table.FicheOldDirigeantsList")
+# # Function that create a list the contains a certain number of dictionaries.
+# def createDict(number):
+# 	dict_list = []
 
-		#All kind of results.
-		all_results = heads_info.find_all("h4")
+# 	for i in range(number):
+# 		dictionary = {}
+# 		dict_list.append(dictionary)
 
-		#All the tables of results (one table for each kind of results).
-		head_list = heads_info.find_all("table")
+# 	return dict_list
+
+
+
+# def getHeadsResults2(browser, url):
+# 	head_info_list = []
+# 	titles = []
+# 	to_remove = []
+# 	i = 0
+# 	regex1 = re.compile(r"^((M|MME)\s\w*\s\w*)")
+# 	regex2 = re.compile(r"^((M|MME)\s\w*\s\w*\s\w*)")
+
+# 	browser.get(url)
+
+# 	#BeautifulSoup parser
+# 	html = browser.page_source
+# 	soup = bs(html, 'html.parser')
+
+# 	#If there is no page for the heads information : end the fonction by returning an empty dictionary.
+# 	if soup.select_one("div#error") != None:
+# 		return head_info_list
+
+# 	#If the page exists :
+# 	else:
+# 		heads_info = soup.select_one("div.Card.frame.table.FicheOldDirigeantsList")
+
+# 		#All kind of results.
+# 		all_results = heads_info.find_all("h4")
+
+# 		#All the tables of results (one table for each kind of results).
+# 		head_list = heads_info.find_all("table")
 		
 
-		#Number of tables.
-		l = len(head_list)
+# 		#Number of tables.
+# 		l = len(head_list)
 
-		#i = 0 at the beginning and will increase by one every time.
-		i = 0
+# 		#i = 0 at the beginning and will increase by one every time.
+# 		i = 0
 
-		#Create a dictionary like this : {title1 : {}, title2 = {}, ...}.
-		for element in all_results:
-			titles.append(element.contents[0])
+# 		#Create a dictionary like this : {title1 : {}, title2 = {}, ...}.
+# 		for element in all_results:
+# 			titles.append(element.contents[0])
 			
-			#Table number i.
-			table = head_list[i]
+# 			#Table number i.
+# 			table = head_list[i]
 
-			#All the lines in table i.
-			lines = table.find_all("tr")
+# 			#All the lines in table i.
+# 			lines = table.find_all("tr")
 
-			j = len(lines)
-			dict_list = createDict(j)
+# 			j = len(lines)
+# 			dict_list = createDict(j)
 
-			m = 0
+# 			m = 0
 
-			#For each line of the table :
-			for element in lines:
-				#First column of each line gives the name of the person.
-				column = element.find("td")
+# 			#For each line of the table :
+# 			for element in lines:
+# 				#First column of each line gives the name of the person.
+# 				column = element.find("td")
 
-				#Get the a tag that contain the names.
-				name = column.find("a", {"class":"Link name"}) 
+# 				#Get the a tag that contain the names.
+# 				name = column.find("a", {"class":"Link name"}) 
 
-				if name != []:
+# 				if name != []:
 
-					dict_list[m]["position"] = titles[i]
-					#Keep only the physical person and not moral person.
-					name_clean = name.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "")
+# 					dict_list[m]["position"] = titles[i]
+# 					#Keep only the physical person and not moral person.
+# 					name_clean = name.contents[0].replace("\n", "").replace("                        ", "").replace("                    ", "")
 
-					#Get only a name with 2 words (ex : Frederic DUPONT).
-					matche1 = regex1.match(name_clean)
+# 					#Get only a name with 2 words (ex : Frederic DUPONT).
+# 					matche1 = regex1.match(name_clean)
 
-					#Get only a name with 3 words (ex : Frederic LE MOINE).
-					matche2 = regex2.match(name_clean)
+# 					#Get only a name with 3 words (ex : Frederic LE MOINE).
+# 					matche2 = regex2.match(name_clean)
 
-					if (matche1 != None) or (matche2 != None):
-						if matche2 != None :
-							dict_list[m]["name"] = matche2.groups()[0].replace("M ", "").replace("MME ", "")
+# 					if (matche1 != None) or (matche2 != None):
+# 						if matche2 != None :
+# 							dict_list[m]["name"] = matche2.groups()[0].replace("M ", "").replace("MME ", "")
 						
-						else:
-							dict_list[m]["name"] = matche1.groups()[0].replace("M ", "").replace("MME ", "")
+# 						else:
+# 							dict_list[m]["name"] = matche1.groups()[0].replace("M ", "").replace("MME ", "")
 						
 						
-					 	#Get the age of each person.
-						link = name["href"]
+# 					 	#Get the age of each person.
+# 						link = name["href"]
 
-						try:
-							browser.get(link)
-						except:
-							break
+# 						try:
+# 							browser.get(link)
+# 						except:
+# 							break
 
-						html = browser.page_source
-						soup = bs(html, 'html.parser')
-						cadre = soup.select_one("div#company_identity")
-						if cadre != None:
-							birth_year = cadre.find_all("p", {"class":"adressText"})
+# 						html = browser.page_source
+# 						soup = bs(html, 'html.parser')
+# 						cadre = soup.select_one("div#company_identity")
+# 						if cadre != None:
+# 							birth_year = cadre.find_all("p", {"class":"adressText"})
 				
-							if birth_year != None:
-								dict_list[m]["birthyear"] = birth_year[0].contents[0].replace("Né en ", "").replace("Née en  ", "")
+# 							if birth_year != None:
+# 								dict_list[m]["birthyear"] = birth_year[0].contents[0].replace("Né en ", "").replace("Née en  ", "")
 								
-				m += 1
+# 				m += 1
 
 
-			#Add the empty elements from dict_list to the to_remove list.
-			for k in range(j):
-				if dict_list[k] == {}:
-					to_remove.append(dict_list[k])
+# 			#Add the empty elements from dict_list to the to_remove list.
+# 			for k in range(j):
+# 				if dict_list[k] == {}:
+# 					to_remove.append(dict_list[k])
 
-			#For each element in to_remove list, remove it from dict_list.
-			l = len(to_remove)	
-			if l != 0:
-				for n in range(l):
-					dict_list.remove(to_remove[n])
+# 			#For each element in to_remove list, remove it from dict_list.
+# 			l = len(to_remove)	
+# 			if l != 0:
+# 				for n in range(l):
+# 					dict_list.remove(to_remove[n])
 
 			
-			#Add the elements of dict_list to the final list.
-			for e in dict_list:
-				head_info_list.append(e)
+# 			#Add the elements of dict_list to the final list.
+# 			for e in dict_list:
+# 				head_info_list.append(e)
 
-			#Do the same for the next table.
-			i += 1
+# 			#Do the same for the next table.
+# 			i += 1
 
-	print(head_info_list)
-
-
+# 	print(head_info_list)
 
 
-if __name__=="__main__":
-	url = "https://www.societe.com/dirigeants/sa-hlm-ville-d-alencon-et-de-l-orne-le-logis-familial-096820121.html"
 
-	#Launch Selenium without displaying the open browser.
-	options = Options()
-	options.headless = True
-	browser = wd.Firefox(options=options)
-	browser.minimize_window()
-	browser.implicitly_wait(10)
 
-	getHeadsResults2(browser, url)
+# if __name__=="__main__":
+# 	url = "https://www.societe.com/dirigeants/sa-hlm-ville-d-alencon-et-de-l-orne-le-logis-familial-096820121.html"
 
-	browser.quit()
+# 	#Launch Selenium without displaying the open browser.
+# 	options = Options()
+# 	options.headless = True
+# 	browser = wd.Firefox(options=options)
+# 	browser.minimize_window()
+# 	browser.implicitly_wait(10)
+
+# 	getHeadsResults2(browser, url)
+
+# 	browser.quit()

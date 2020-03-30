@@ -15,7 +15,10 @@ class Company:
 		self._activity = None
 		self._tel = None
 		self._date_registration = None
-		self._dns_info = {}
+		self._dns_info = []
+		self._mx_info = []
+		self._host_info = []
+		self._subdomains = []
 		self._emails = []
 		self._leaked_emails = {}
 		self._employees = []
@@ -47,6 +50,15 @@ class Company:
 	def get_dns_info(self):
 		return self._dns_info
 
+	def get_mx_info(self):
+		return self._mx_info
+
+	def get_host_info(self):
+		return self._host_info
+
+	def get_subdomains(self):
+		return self._subdomains
+
 	def get_emails(self):
 		return self._emails
 
@@ -77,7 +89,16 @@ class Company:
 		self._date_registration = p_date
 
 	def set_dns_info(self, p_dns_info):
-		self._dns_info = p_dns_info
+		self._dns_info.append(p_dns_info)
+
+	def set_mx_info(self, p_mx_info):
+		self._mx_info.append(p_mx_info)
+
+	def set_host_info(self, p_host_info):
+		self._host_info.append(p_host_info)
+
+	def set_subdomains(self, p_subdomains):
+		self._subdomains.append(p_subdomains)
 
 	def set_emails(self, p_emails):
 		self._emails = p_emails
