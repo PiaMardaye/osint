@@ -127,7 +127,6 @@ def startScan(data):
 	
 	#Uncomment the second line only if it's necessary (Hunter.io offers only 50 requests/month).
 	emails = []
-	
 	#emails = getEmails(data["domain"])
 
 

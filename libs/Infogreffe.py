@@ -441,7 +441,8 @@ def getGeneralInfo(browser, company_name):
 
 		#Add those information in the main dictionary.
 		main_info.update(secondary_info)
+		
 
-		main_info["href"] = href
+	main_info["href"] = href
 
 	return main_info
