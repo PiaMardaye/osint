@@ -22,17 +22,15 @@ class PDF(FPDF):
 		self.cell(0, 10, 'Page ' + str(self.page_no()) + '/{nb}', 0, 0, 'C')
 
 
-	def chapter_title(self, num, label):
-		self.set_font("Times", 'U', 16)
+	def chapter_title(self, label):
+		self.set_font("Times", 'B', 16)
 		self.cell(0, 6, label, 0, 1, 'C')
-		self.ln(4)
+		self.ln(6)
 
 
 	def chapter_body(self, name):
 		self.set_font("Times", '', 12)
 		self.cell(0, 6, "Hey", 0, 1, 'L')
-		self.ln(5)
-		self.cell(0, 10, "you", 0 ,1)
 		self.ln()
 
 
@@ -40,14 +38,3 @@ class PDF(FPDF):
 		self.add_page()
 		self.chapter_title(num, title)
 		self.chapter_body(name)
-
-company_name = "esiea"
-pdf = PDF()	
-pdf.alias_nb_pages()
-pdf.add_page()
-pdf.set_font('Times', 'B', 30)
-pdf.cell(0, 150, "Résultats de l'OSINT - " + company_name.upper(), 0, 1, 'C')
-pdf.print_chapter(1, "A RUNAWAY REEF", "texte1.txt")
-pdf.print_chapter(2, "THE PROS AND CONS", 'texte2.txt')
-pdf.add_page()
-pdf.output('essai.pdf')
