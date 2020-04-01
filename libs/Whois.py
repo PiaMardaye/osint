@@ -43,8 +43,8 @@ def getWhois(domain):
             if m != None:
                 info["Registry Expiry Date"] = m.groups()[0]
 
-        print("\t\tRegistrar : ", info["Registrar"])
-        print("\t\tExpiry date : ", info["Registry Expiry Date"])
+        # print("\t\tRegistrar : ", info["Registrar"])
+        # print("\t\tExpiry date : ", info["Registry Expiry Date"])
 
 
     #"hold:" only exists in the second type of output.
@@ -60,9 +60,10 @@ def getWhois(domain):
             if m != None:
                 info["Expiry Date"] = m.groups()[0]
 
-        print("\t\tRegistrar : ", info["registrar"])
-        print("\t\tSource : ", info["source"])
-        print("\t\tExpiry date : ", info["Expiry Date"])
+        # print("\t\tRegistrar : ", info["registrar"])
+        # print("\t\tSource : ", info["source"])
+        # print("\t\tExpiry date : ", info["Expiry Date"])
+    return info
 
 
 
@@ -83,6 +84,7 @@ def getHost(company_domain):
             ip_adress = line.split(" ")[3]
             ip_adresses.append(ip_adress)
 
-    for i in range(len(ip_adresses)):
-        print("\t\tIP adress ", str(i+1), " : ", ip_adresses[i])
+    # for i in range(len(ip_adresses)):
+    #     print("\t\tIP adress ", str(i+1), " : ", ip_adresses[i])
+    return ip_adresses
 

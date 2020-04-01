@@ -38,6 +38,7 @@ from libs.Whois			   import *
 from libs.Email			   import *
 from libs.Company 		   import Company
 from libs.Employee 		   import Employee 
+from libs.Pdf 			   import PDF 
 
 
 
@@ -115,6 +116,207 @@ def parseArgs(argv):
 
 
 
+def generatePDF(data, dns_info, heads_info, company):
+	p = 1
+
+	pdf = PDF()	
+	pdf.alias_nb_pages()
+
+	pdf.add_page()
+	pdf.set_font('Times', 'B', 30)
+	pdf.cell(190, 150, "Résultats de l'OSINT", 0, 1, 'C')
+	pdf.cell(0, -100, data["name"].upper(), 0, 1, 'C')
+	
+	#General information
+	pdf.add_page()
+	pdf.chapter_title("INFORMATIONS GENERALES")
+
+	pdf.set_font("Times", "B", 16)
+	pdf.cell(0, 10, "Bâtiment principal :", 0, 1)
+
+	pdf.set_font('Times', '', 14)
+	pdf.cell(0, 10, "Nom : " + company.get_name(), 0, 1)
+	pdf.cell(0, 10, "Nom de domaine : " + company.get_domain(), 0, 1)
+	pdf.cell(0, 10, "SIRET : " + company.get_SIRET(), 0, 1)
+	pdf.cell(0, 10, "Adresse : " + company.get_address(), 0, 1)
+	pdf.cell(0, 10, "Activité : " + company.get_activity(), 0, 1)
+	pdf.cell(0, 10, "Date de création : " + company.get_date(), 0, 1)
+	
+	pdf.ln(3)
+
+	companies_list = company.get_companies()
+	for j in range(1, len(company.get_companies()) + 1):
+		pdf.set_font("Times", "B", 16)
+		pdf.cell(0, 10, "Bâtiment secondaire " + str(j) + " :", 0, 1)
+
+		pdf.set_font('Times', '', 14)
+		pdf.cell(0, 10, "SIRET : " + companies_list[p-1].get_SIRET(), 0, 1)
+		pdf.cell(0, 10, "Adresse : " + companies_list[p-1].get_address(), 0, 1)
+		p += 1
+
+
+
+	#DNS Information
+	pdf.add_page()
+	pdf.chapter_title("INFORMATIONS DNS")
+
+	pdf.set_font("Times", "B", 16)
+	pdf.cell(0, 10, "A propos du nom de domaine :", 0, 1)
+
+	whois_info = getWhois(data["domain"])
+	ip_adresses = getHost(data["domain"])
+
+	pdf.set_font('Times', '', 14)
+	if "registrar" in whois_info:
+		pdf.cell(0, 7, "Registrar : " + whois_info["registrar"], 0, 1)
+	elif "Registrar" in  whois_info:
+		pdf.cell(0, 7, "Registrar : " + whois_info["Registrar"], 0, 1)
+
+	if "source" in  whois_info:
+		pdf.cell(0, 7, "Source : " + whois_info["source"], 0, 1)
+
+	if "Expiry Date" in  whois_info:
+		pdf.cell(0, 7, "Expiry Date : " + whois_info["Expiry Date"], 0, 1)
+	elif "Registry Expiry Date" in  whois_info:
+		pdf.cell(0, 7, "Expiry Date : " + whois_info["Registry Expiry Date"], 0, 1)
+
+	if ip_adresses != []:
+		if len(ip_adresses) == 1:
+			pdf.cell(0, 7, "Adresse IP :" + ip_adresses[0], 0, 1)
+		else:
+			for i in range(len(ip_adresses)):
+				pdf.cell(0, 7, "Adresse IP " + str(i+1) + " :" + ip_adresses[i], 0, 1)
+		pdf.ln(3)
+
+
+	if dns_info["subdomains"] != []:
+		pdf.set_font("Times", "B", 16)
+		pdf.cell(0, 10, "Sous-domaines :", 0, 1)
+
+		subdomains_list = company.get_subdomains() 
+		for subdomain in subdomains_list:
+			whois_info = getWhois(subdomain)
+			ip_adresses = getHost(subdomain)
+			pdf.set_font('Times', '', 14)
+			pdf.cell(0, 7, "- " + subdomain, 0, 1)
+
+			if "registrar" in whois_info:
+				pdf.cell(0, 7, "	Registrar : " + whois_info["registrar"], 0, 1)
+			elif "Registrar" in  whois_info:
+				pdf.cell(0, 7, "	Registrar : " + whois_info["Registrar"], 0, 1)
+
+			if "source" in  whois_info:
+				pdf.cell(0, 7, "	Source : " + whois_info["source"], 0, 1)
+
+			if "Expiry Date" in  whois_info:
+				pdf.cell(0, 7, "	Expiry Date : " + whois_info["Expiry Date"], 0, 1)
+			elif "Registry Expiry Date" in  whois_info:
+				pdf.cell(0, 7, "	Expiry Date : " + whois_info["Registry Expiry Date"], 0, 1)
+
+			if ip_adresses != []:
+				if len(ip_adresses) == 1:
+					pdf.cell(0, 7, "	Adresse IP :" + ip_adresses[0], 0, 1)
+				else:
+					for i in range(len(ip_adresses)):
+						pdf.cell(0, 7, "	Adresse IP " + str(i+1) + " :" + ip_adresses[i], 0, 1)
+			pdf.ln(4)			
+		pdf.ln(3)		
+
+
+	if dns_info["dns"] != []:
+		pdf.set_font("Times", "B", 16)
+		pdf.cell(0, 10, "Informations - DNS :", 0, 1)
+
+		pdf.set_font('Times', '', 14)
+		dns_list = company.get_dns_info()
+		for dns in dns_list:
+			pdf.cell(0, 7, "DNS : " + dns["domain"], 0, 1)
+			pdf.cell(0, 7, "Adresse IP : " + dns["ip"], 0, 1)
+			pdf.cell(0, 7, "Propriétaire : " + dns["owner"], 0, 1)
+			pdf.ln(4)
+		pdf.ln(3)	
+
+
+	if dns_info["mx"] != []:
+		pdf.set_font("Times", "B", 16)
+		pdf.cell(0, 10, "Informations - Serveurs de messagerie :", 0, 1)
+
+		pdf.set_font('Times', '', 14)
+		mx_list = company.get_mx_info()
+		for mx in mx_list:
+			pdf.cell(0, 7, "Serveur MX : " + mx["domain"], 0, 1)
+			pdf.cell(0, 7, "Adresse IP : " + mx["ip"], 0, 1)
+			pdf.cell(0, 7, "Propriétaire : " + mx["owner"], 0, 1)
+			pdf.ln(4)
+		pdf.ln(3)
+
+
+	if dns_info["host"] != []:
+		pdf.set_font("Times", "B", 16)
+		pdf.cell(0, 10, "Informations - Hôtes :", 0, 1)
+
+		pdf.set_font('Times', '', 14)
+		host_list = company.get_host_info()
+		for host in host_list:
+			pdf.cell(0, 7, "Serveur MX : " + host["domain"], 0, 1)
+			pdf.cell(0, 7, "Adresse IP : " + host["ip"], 0, 1)
+			pdf.cell(0, 7, "Propriétaire : " + host["owner"], 0, 1)
+			pdf.ln(4)
+		pdf.ln(3)
+
+	pdf.add_page()
+	pdf.chapter_title("GRAPHE - NOMS DE SERVEURS/HÔTES")
+	pdf.image('graph_'+ data["domain"] + '.png', 10, 70, 190)
+
+
+
+	#Employees informations
+	pdf.add_page()
+	pdf.chapter_title("INFORMATIONS EMPLOYES")
+
+	pdf.set_font('Times', '', 14)
+	if heads_info != []:
+		employees_list = company.get_employees()
+		for j in range(len(employees_list)):
+			name = employees_list[j].get_name()
+			if name != None:
+				pdf.cell(0, 5, "Nom : " + name, 0, 1)
+			else:
+				pdf.cell(0, 5, "Nom : Inconnu.", 0, 1)
+
+			birthyear = employees_list[j].get_birthyear()
+			if birthyear != None:
+				pdf.cell(0, 5, "Né(e) le : " + birthyear, 0, 1)
+			else:
+				pdf.cell(0, 5, "Né(e) le : Inconnu.", 0, 1)
+
+			position = employees_list[j].get_position()
+			if position != None:
+				pdf.cell(0, 5, "Position : " + position, 0, 1)
+			else:
+				pdf.cell(0, 5, "Position : Inconnue.", 0, 1)
+
+			email = employees_list[j].get_email()
+			if email != None:
+				pdf.cell(0, 5, "Email : " + email, 0, 1)
+			else:
+				pdf.cell(0, 5, "Email : Inconnu.", 0, 1)
+
+			twitter = employees_list[j].get_twitter()
+			if twitter != None:
+				pdf.cell(0, 5, "Twitter : " + twitter, 0, 1)
+			else:
+				pdf.cell(0, 5, "Twitter : Inconnu.", 0, 1)
+				
+			pdf.ln(4)
+		pdf.ln(3)
+
+	#Generation of the PDF.
+	pdf.output(data["name"] + '.pdf')
+
+
+
+
 def startScan(data):
 	i = 1
 	k = 1
@@ -126,8 +328,8 @@ def startScan(data):
 	#------------------------------------EMAILS-------------------------------------
 	
 	#Uncomment the second line only if it's necessary (Hunter.io offers only 50 requests/month).
-	emails = []
-	#emails = getEmails(data["domain"])
+	#emails = []
+	emails = getEmails(data["domain"])
 
 
 	#--------------------------------DNS INFORMATION--------------------------------
@@ -206,82 +408,8 @@ def startScan(data):
 			continue
 
 
-
-
-	#Get the data of the company.
-	print("\n--------------GENERAL INFORMATION--------------")
-	print("Main building\n:")
-	print("\tName : ", c.get_name())
-	print("\tDomain : ", c.get_domain())
-	print("\tSIRET : ", c.get_SIRET())
-	print("\tAddress : ", c.get_address())
-	print("\tActivity : ", c.get_activity())
-	print("\tDate of registration : ", c.get_date())
-
-
-	companies_list = c.get_companies()
-	for j in range(1, len(c.get_companies()) + 1):
-		print("\nBuilding ", j+1, " :\n")
-		print("\tSIRET : ", companies_list[k-1].get_SIRET())
-		print("\tAdress : ", companies_list[k-1].get_address())
-		k += 1
-
-
-	print("\n--------------DOMAIN INFORMATION--------------")
-	print("Domain :\n")
-	getWhois(data["domain"])
-	getHost(data["domain"])
-	print("\n")
-
-	if dns_info["subdomains"] != []:
-		print("Subdomains : \n")
-		subdomains_list = c.get_subdomains() 
-		for subdomain in subdomains_list:
-			print("\t", subdomain)
-			getWhois(subdomain)
-			getHost(subdomain)
-			print("\n")
-
-	if dns_info["dns"] != []:
-		print("\nDNS information :\n")
-		dns_list = c.get_dns_info()
-		for dns in dns_list:
-			print("\tDNS : ", dns["domain"])
-			print("\tIP adress : ", dns["ip"])
-			print("\tOwner : ", dns["owner"])
-			print("\n")
-
-	if dns_info["mx"] != []:
-		print("Message server information :\n")
-		mx_list = c.get_mx_info()
-		for mx in mx_list:
-			print("\tMX server : ", mx["domain"])
-			print("\tIP adress : ", mx["ip"])
-			print("\tOwner : ", mx["owner"])
-			print("\n")
-
-	if dns_info["host"] != []:
-		print("Host information :\n")
-		host_list = c.get_host_info()
-		for host in host_list:
-			print("\tHost : ", host["domain"])
-			print("\tIP adress : ", host["ip"])
-			print("\tOwner : ", host["owner"])
-			print("\n")
-
-
-	if heads_info != []:
-		print("\n--------------EMPLOYEES--------------")
-		employees_list = c.get_employees()
-		for j in range(len(employees_list)):
-			print("Name : ", employees_list[j].get_name())
-			print("Born in : ", employees_list[j].get_birthyear())
-			print("Position : ", employees_list[j].get_position())
-			print("Email : ", employees_list[j].get_email())
-			print("Twitter : ", employees_list[j].get_twitter())
-			print("\n")
-
-
+	#Generate the final PDF.
+	generatePDF(data, dns_info, heads_info, c)
 
 
 
@@ -304,7 +432,6 @@ if __name__ == "__main__":
 
 	#Start of the scan.
 	startScan(data)
-
 
 	#Quit Selenium.
 	browser.quit()
