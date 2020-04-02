@@ -307,6 +307,12 @@ def generatePDF(data, dns_info, heads_info, company):
 				pdf.cell(0, 5, "Email : " + email, 0, 1)
 			else:
 				pdf.cell(0, 5, "Email : Inconnu.", 0, 1)
+
+			breaches = employees_list[j].get_breaches()
+			if breaches != None:
+				pdf.cell(0, 5, "Breaches : " + breaches, 0, 1)
+			else:
+				pdf.cell(0, 5, "Breaches : Inconnu.", 0, 1)
 				
 			pdf.ln(4)
 		pdf.ln(3)
@@ -328,8 +334,8 @@ def startScan(data):
 	#------------------------------------EMAILS-------------------------------------
 	
 	#Uncomment the second line only if it's necessary (Hunter.io offers only 50 requests/month).
-	emails = []
-	#emails = getEmails(data["domain"])
+	#emails = []
+	emails = getEmails(data["domain"])
 
 
 	#--------------------------------DNS INFORMATION--------------------------------
@@ -390,6 +396,10 @@ def startScan(data):
 				employee.set_email(person["email"])
 			else:
 				employee.set_email("Unknown.")
+			if "breaches" in person:
+				employee.set_breaches(person["breaches"])
+			else:
+				employee.set_breaches("Aucune.")
 			if "position" in person:
 				employee.set_position(person["position"])
 			else:
