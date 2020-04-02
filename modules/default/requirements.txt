@@ -3,3 +3,6 @@ setuptools
 download
 tqdm
 shodan
+h8mail
+requests
+fpdf

@@ -296,17 +296,17 @@ def generatePDF(data, dns_info, heads_info, company):
 			else:
 				pdf.cell(0, 5, "Position : Inconnue.", 0, 1)
 
+			debut = employees_list[j].get_debut()
+			if debut != None:
+				pdf.cell(0, 5, "Depuis : " + debut, 0, 1)
+			else:
+				pdf.cell(0, 5, "Depuis : Inconnue.", 0, 1)
+
 			email = employees_list[j].get_email()
 			if email != None:
 				pdf.cell(0, 5, "Email : " + email, 0, 1)
 			else:
 				pdf.cell(0, 5, "Email : Inconnu.", 0, 1)
-
-			twitter = employees_list[j].get_twitter()
-			if twitter != None:
-				pdf.cell(0, 5, "Twitter : " + twitter, 0, 1)
-			else:
-				pdf.cell(0, 5, "Twitter : Inconnu.", 0, 1)
 				
 			pdf.ln(4)
 		pdf.ln(3)
@@ -328,8 +328,8 @@ def startScan(data):
 	#------------------------------------EMAILS-------------------------------------
 	
 	#Uncomment the second line only if it's necessary (Hunter.io offers only 50 requests/month).
-	#emails = []
-	emails = getEmails(data["domain"])
+	emails = []
+	#emails = getEmails(data["domain"])
 
 
 	#--------------------------------DNS INFORMATION--------------------------------
@@ -342,7 +342,7 @@ def startScan(data):
 	#Get the general information.
 	general_info = getGeneralInfo(browser, data["name"])
 	heads_info = getHeadsResults(browser, getURLHeads_info(general_info["href"])) + emails
-
+	
 
 	#Fill the data of the company.
 	if "N° de SIRET" in general_info:
@@ -394,13 +394,10 @@ def startScan(data):
 				employee.set_position(person["position"])
 			else:
 				employee.set_position("Unknown.")
-			if "twitter" in person:
-				if person["twitter"] != "False":
-					employee.set_twitter("Has an account.")
-				else:
-					employee.set_twitter("No account.")
+			if "debut" in person:
+				employee.set_debut(person["debut"])
 			else:
-				employee.set_twitter("Unknown.")
+				employee.set_debut("Unknown.")
 
 			c.set_employees(employee)
 
