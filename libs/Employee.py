@@ -15,6 +15,7 @@ class Employee:
 		self._birthyear = None
 		self._email = None
 		self._position = None
+		self._debut = None
 		self._twitter = False
 
 
@@ -31,6 +32,9 @@ class Employee:
 	def get_position(self):
 		return self._position
 
+	def get_debut(self):
+		return self._debut
+
 	def get_twitter(self):
 		return self._twitter
 
@@ -44,6 +48,9 @@ class Employee:
 
 	def set_position(self, p_position):
 		self._position = p_position
+
+	def set_debut(self, p_debut):
+		self._debut = p_debut
 
 	def set_twitter(self, p_twitter):
 		self._twitter = p_twitter

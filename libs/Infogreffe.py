@@ -282,6 +282,7 @@ def getHeadsResults(browser, url):
 
 				#Get the a tag that contain the names.
 				name = column.find("a", {"class":"Link name"}) 
+				mandat = column.find("span", {"class":"mandat"})
 
 				if name != []:
 
@@ -302,7 +303,9 @@ def getHeadsResults(browser, url):
 						else:
 							dict_list[m]["name"] = matche1.groups()[0].replace("M ", "").replace("MME ", "")
 						
-						
+						since_when = mandat.contents[1].contents[0]
+						dict_list[m]["debut"] = since_when
+
 					 	#Get the age of each person.
 						link = name["href"]
 
@@ -404,9 +407,6 @@ def getGeneralInfo(browser, company_name):
 
 	#Add the information about the heads of the company in the main dictionary.
 	head_url = getURLHeads_info(href)
-	#heads_info = getHeadsResults(browser, head_url)
-
-	#main_info.update(heads_info)
 
 	#Get information about the other buildings the company may have.
 	for i in range(1, len(results_list)):
