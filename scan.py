@@ -258,7 +258,7 @@ def generatePDF(data, dns_info, heads_info, company):
 		pdf.set_font('Times', '', 14)
 		host_list = company.get_host_info()
 		for host in host_list:
-			pdf.cell(0, 7, "Serveur MX : " + host["domain"], 0, 1)
+			pdf.cell(0, 7, "Hôte : " + host["domain"], 0, 1)
 			pdf.cell(0, 7, "Adresse IP : " + host["ip"], 0, 1)
 			pdf.cell(0, 7, "Propriétaire : " + host["owner"], 0, 1)
 			pdf.ln(4)
@@ -334,8 +334,8 @@ def startScan(data):
 	#------------------------------------EMAILS-------------------------------------
 	
 	#Uncomment the second line only if it's necessary (Hunter.io offers only 50 requests/month).
-	#emails = []
-	emails = getEmails(data["domain"])
+	emails = []
+	#emails = getEmails(data["domain"])
 
 
 	#--------------------------------DNS INFORMATION--------------------------------
