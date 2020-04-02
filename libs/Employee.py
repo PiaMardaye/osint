@@ -14,6 +14,7 @@ class Employee:
 		self._name = p_name
 		self._birthyear = None
 		self._email = None
+		self._breaches = None
 		self._position = None
 		self._debut = None
 		self._twitter = False
@@ -28,6 +29,9 @@ class Employee:
 
 	def get_email(self):
 		return self._email
+
+	def get_breaches(self):
+		return self._breaches
 
 	def get_position(self):
 		return self._position
@@ -45,6 +49,9 @@ class Employee:
 
 	def set_email(self, p_email):
 		self._email = p_email
+
+	def set_breaches(self, p_breaches):
+		self._breaches = p_breaches
 
 	def set_position(self, p_position):
 		self._position = p_position
