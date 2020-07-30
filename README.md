@@ -41,8 +41,3 @@ Ce projet d'OSINT - Sensibilisation permet de récolter des informations en sour
 * Récolter des informations sur les employés : nom, fonction, email, âge, hobbies, etc.
 
 **Tous les résultats sont pour l'instant à placer dans un dictionnaire Python : un pour les résultats SHODAN, un pour les emails, et un pour les informations du personnel.**
-
-## Collaboratrices
-* Pia MARDAYE
-* Assiya EL HARCHI
-
