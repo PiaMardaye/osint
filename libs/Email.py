@@ -4,12 +4,13 @@
 import requests
 import json
 import ast
+import subprocess
 
 
 #Get the web sites where the account corresponding to the given email has been part of a data breach.
 def getBreaches(email):
 	url = "https://haveibeenpwned.com/api/v3/breachedaccount/" + email
-	key = "5488e632b6a24e3c8df0aebd15324f8f"
+	key = "dfb42d274ce243a7b1d1ba6c5c122498"
 	headers = {"hibp-api-key":key}
 
 	breaches = requests.get(url, headers=headers)
@@ -28,15 +29,27 @@ def getEmails(company_domain):
 	data = []
 
 	#Search for emails.
-	req = requests.get("https://api.hunter.io/v2/domain-search?domain=" + company_domain + "&api_key=120a3fe9378ed32c9fced6973f43cc85ede7fb5e")
+	#req = requests.get("https://api.hunter.io/v2/domain-search?domain=" + company_domain + "&api_key=ac2ee6848dc0f16a83fddee37a52be9a2b69ee16&limit=50")
 
+	r = subprocess.run(["wget", "https://api.hunter.io/v2/domain-search?domain=" + company_domain + "&api_key=ac2ee6848dc0f16a83fddee37a52be9a2b69ee16"], stdout=subprocess.PIPE)
+
+	
 	# Write the results in the file that had been created (useful for debug or get more information).
-	fichier = open("emails.json", "w")
-	fichier.write(req.text)
+	fichier = open("domain-search?domain=" + company_domain + "&api_key=ac2ee6848dc0f16a83fddee37a52be9a2b69ee16", "r")
+	contenu = fichier.read()
 
 	#Parse data from Web request results.
-	r = json.loads(req.text)
+	r = json.loads(contenu)
 
+	fichier.close()
+
+	# # Write the results in the file that had been created (useful for debug or get more information).
+	# fichier = open("emails.json", "w")
+	# fichier.write(req.text)
+
+	# #Parse data from Web request results.
+	# r = json.loads(req.text)
+	
 	#Only email parts contain most valuable information.
 	emails = r["data"]["emails"]
 
@@ -77,4 +90,5 @@ def getEmails(company_domain):
 		return data
 
 	return data
+
 

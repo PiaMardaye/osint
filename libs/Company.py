@@ -20,7 +20,6 @@ class Company:
 		self._host_info = []
 		self._subdomains = []
 		self._emails = []
-		self._leaked_emails = {}
 		self._employees = []
 		self._companies = []
 
@@ -62,9 +61,6 @@ class Company:
 	def get_emails(self):
 		return self._emails
 
-	def get_leaked_emails(self):
-		return self._leaked_emails
-
 	def get_employees(self):
 		return self._employees
 
@@ -102,9 +98,6 @@ class Company:
 
 	def set_emails(self, p_emails):
 		self._emails = p_emails
-
-	def set_leaked_emails(self, p_leaked_emails):
-		self._leaked_emails = p_leaked_emails
 
 	def set_employees(self, p_employees):
 		self._employees.append(p_employees)

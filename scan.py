@@ -62,7 +62,7 @@ def displayHelp():
 
 
 def parseArgs(argv):
-
+ 
 	#Dictonary that will contain the name and the domain name of the company.
 	data = {}
 
@@ -137,10 +137,14 @@ def generatePDF(data, dns_info, heads_info, company):
 	pdf.set_font('Times', '', 14)
 	pdf.cell(0, 10, "Nom : " + company.get_name(), 0, 1)
 	pdf.cell(0, 10, "Nom de domaine : " + company.get_domain(), 0, 1)
-	pdf.cell(0, 10, "SIRET : " + company.get_SIRET(), 0, 1)
-	pdf.cell(0, 10, "Adresse : " + company.get_address(), 0, 1)
-	pdf.cell(0, 10, "Activité : " + company.get_activity(), 0, 1)
-	pdf.cell(0, 10, "Date de création : " + company.get_date(), 0, 1)
+	if company.get_SIRET() != None:
+		pdf.cell(0, 10, "SIRET : " + company.get_SIRET(), 0, 1)
+	if company.get_address() != None:
+		pdf.cell(0, 10, "Adresse : " + company.get_address(), 0, 1)
+	if company.get_activity() != None:
+		pdf.cell(0, 10, "Activité : " + company.get_activity(), 0, 1)
+	if company.get_date() != None:
+		pdf.cell(0, 10, "Date de création : " + company.get_date(), 0, 1)
 	
 	pdf.ln(3)
 
@@ -150,8 +154,10 @@ def generatePDF(data, dns_info, heads_info, company):
 		pdf.cell(0, 10, "Bâtiment secondaire " + str(j) + " :", 0, 1)
 
 		pdf.set_font('Times', '', 14)
-		pdf.cell(0, 10, "SIRET : " + companies_list[p-1].get_SIRET(), 0, 1)
-		pdf.cell(0, 10, "Adresse : " + companies_list[p-1].get_address(), 0, 1)
+		if companies_list[p-1].get_SIRET() != None:
+			pdf.cell(0, 10, "SIRET : " + companies_list[p-1].get_SIRET(), 0, 1)
+		if companies_list[p-1].get_address() != None:
+			pdf.cell(0, 10, "Adresse : " + companies_list[p-1].get_address(), 0, 1)
 		p += 1
 
 
@@ -334,8 +340,8 @@ def startScan(data):
 	#------------------------------------EMAILS-------------------------------------
 	
 	#Uncomment the second line only if it's necessary (Hunter.io offers only 50 requests/month).
-	emails = []
-	#emails = getEmails(data["domain"])
+	#emails = []
+	emails = getEmails(data["domain"])
 
 
 	#--------------------------------DNS INFORMATION--------------------------------
