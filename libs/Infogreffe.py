@@ -21,7 +21,7 @@ import os
 
 # Function that clean the href in order to get the href leading to the final web page.
 def cleanHref(href_clean):
-	re_clean = re.compile(r"^[\/(marques|societe)]*([\w]*)$")
+	re_clean = re.compile(r"^[\/(marques|societe|etablissements)]*([\w]*)$")
 	matches = re_clean.match(href_clean)
 
 	#If the href contains the word "marques" or "societe", delete those words from it.
@@ -71,6 +71,14 @@ def getURLChoosenCompany(browser, href):
 	href_cleaned = cleanHref(href)
 
 	url = "https://www.societe.com/etablissements"+href_cleaned
+
+	browser.get(url)
+
+
+def getURLChoosenCompany2(browser, href):
+	href_cleaned = cleanHref(href)
+
+	url = "https://www.societe.com/etablissement"+href_cleaned
 
 	browser.get(url)
 
@@ -225,6 +233,8 @@ def getResults_marque(browser, dictionary):
 		return results_dict2
 
 
+
+
 def getHeadsResults(browser, url):
 	head_info_list = []
 	titles = []
@@ -372,14 +382,32 @@ def getGeneralInfo(browser, company_name):
 
 
 	#Get the part of the source code that contains all the results.
-	results = soup.select_one("div#etabs")
+	#results = soup.select_one("div#etabs")
+	results = soup.select_one("div#etablist")
+	lien = results.select_one("a.Button.levelOne")
+	href2 = lien["href"]
+
+	getURLChoosenCompany2(browser, href2)
+
+
+	#BeautifulSoup parser
+	html = browser.page_source
+	soup = bs(html, 'html.parser')
+
+
+	#Get the part of the source code that contains all the results.
+	results = soup.select_one("div#etablissement")
 
 	
-	results_elements =  results.select(".Table.identity")
+	results_elements =  results.select(".Table.identity.etablissement.mt-16")
+	
+	#results_elements =  results.select(".Table.identity")
 
+	# for i in range(len(results_elements)):
+	# 	if i%2 != 0:
+	# 		results_list.append(results_elements[i])
 	for i in range(len(results_elements)):
-		if i%2 != 0:
-			results_list.append(results_elements[i])
+		results_list.append(results_elements[i])
 
 
 	#Get the main information about the company.
@@ -394,9 +422,9 @@ def getGeneralInfo(browser, company_name):
 				columns = [c.contents[0] for c in info2]
 				if columns[0] in ["Dernière date maj", "N° d'établissement (NIC)", "Nature de l'établissement", "Code ape (NAF)", "Tranche d'effectif salarié"]:
 					continue
-				if columns[0] == "N° de SIRET":
-					siret = columns[1].contents[0]
-					main_info[columns[0]] = siret
+				# if columns[0] == "N° de SIRET":
+				# 	siret = columns[1].contents[0]
+				# 	main_info[columns[0]] = siret
 				else:
 					main_info[columns[0]] = columns[1]
 
